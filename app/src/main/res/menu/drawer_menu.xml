@@ -21,11 +21,11 @@
         <menu>
             <item
                 android:id="@+id/nav_help"
-                android:icon="@drawable/ic_share"
+                android:icon="@drawable/ic_help"
                 android:title="Help" />
             <item
                 android:id="@+id/nav_about"
-                android:icon="@drawable/ic_share"
+                android:icon="@drawable/ic_help"
                 android:title="About" />
             <item
                 android:id="@+id/nav_share"
