@@ -6,21 +6,19 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.isabelle.flash.R;
 import com.isabelle.flash.models.Category;
-
-import java.util.ArrayList;
+import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
 
-    private ArrayList<Category> categories;
+    private List<Category> categories;
 
     //constructor
     //context = activity
-    public CategoryAdapter(Context context, ArrayList<Category> list){
+    public CategoryAdapter(Context context, List<Category> list){
         categories = list;
     }
 
@@ -53,8 +51,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     public CategoryAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         //referring to fragment_categories
         //connected to horizontal layout/row
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_categories,viewGroup,false);
-        return new ViewHolder(v);   //returns to ViewHolder with the layout of the category row
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_categories,viewGroup,false);
+        return new ViewHolder(view);   //returns to ViewHolder with the layout of the category row
     }
 
     //set text on view

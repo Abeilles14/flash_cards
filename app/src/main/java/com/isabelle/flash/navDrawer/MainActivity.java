@@ -3,6 +3,7 @@ package com.isabelle.flash.navDrawer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,7 +18,9 @@ import com.isabelle.flash.fragments.ProfileFragment;
 import com.isabelle.flash.fragments.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
     private DrawerLayout drawer;
+    private Fragment activeFragment = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +55,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         new ProfileFragment()).commit();
                 break;
             case R.id.nav_categories:
+                activeFragment = new CategoriesFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new CategoriesFragment()).commit();
+                        activeFragment).commit();
                 break;
             case R.id.nav_settings:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
@@ -69,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Toast.makeText(this,"Share",Toast.LENGTH_SHORT).show();
                 break;
         }
+
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

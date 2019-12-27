@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/themesFrag" >
+    android:id="@+id/themesFrag"
+    tools:context=".fragments.CategoriesFragment">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -17,10 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-
-    </LinearLayout>
-
-
+    </RelativeLayout>
 
     <com.isabelle.flashcards.fab.FloatingActionButton
         android:id="@+id/addNewCategory"
@@ -36,3 +33,4 @@
         android:layout_height="72dip" />
 
 </FrameLayout>
+
