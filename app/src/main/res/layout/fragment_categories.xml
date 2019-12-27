@@ -19,18 +19,17 @@
 
     </RelativeLayout>
 
-    <com.isabelle.flashcards.fab.FloatingActionButton
-        android:id="@+id/addNewCategory"
-        android:layout_gravity="bottom|end"
-        android:text="j"
-        android:shadowRadius="40"
-        android:shadowDx="5"
-        android:shadowDy="7"
-        android:textColor="@color/action_bar_text_color"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_vertical_margin"
-        android:layout_width="72dip"
-        android:layout_height="72dip" />
+    <!--<com.isabelle.flash.fab.FloatingActionButton-->
+        <!--android:id="@+id/addNewCategory"-->
+        <!--android:layout_gravity="bottom|end"-->
+        <!--android:text="j"-->
+        <!--android:shadowRadius="40"-->
+        <!--android:shadowDx="5"-->
+        <!--android:shadowDy="7"-->
+        <!--android:textColor="@color/action_bar_text_color"-->
+        <!--android:layout_marginBottom="@dimen/activity_horizontal_margin"-->
+        <!--android:layout_marginRight="@dimen/activity_vertical_margin"-->
+        <!--android:layout_width="72dip"-->
+        <!--android:layout_height="72dip" />-->
 
 </FrameLayout>
-
