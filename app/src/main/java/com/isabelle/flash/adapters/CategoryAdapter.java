@@ -65,7 +65,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         //get specific list item tag
         viewHolder.itemView.setTag(categories.get(i));  //use tag in onClick to check which clicked
 
-        viewHolder.category_name.setText(categories.get(i).getName());
+        viewHolder.category_name.setText(categories.get(i).getCategoryName());
         viewHolder.category_description.setText(categories.get(i).getDescription());
     }
 
