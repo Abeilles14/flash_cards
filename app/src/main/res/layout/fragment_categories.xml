@@ -28,7 +28,7 @@
         android:shadowDx="5"
         android:shadowDy="7"
         android:shadowRadius="40"
-        android:textColor="@color/action_bar_text_color"
+        android:background="@color/colorAccent"
         android:tint="@color/action_bar_text_color"
         app:fabCustomSize="70dp"
         app:srcCompat="@drawable/ic_add" />
