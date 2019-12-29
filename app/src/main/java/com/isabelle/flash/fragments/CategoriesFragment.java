@@ -1,18 +1,21 @@
 package com.isabelle.flash.fragments;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.isabelle.flash.ApplicationClass;
 import com.isabelle.flash.R;
 import com.isabelle.flash.adapters.CategoryAdapter;
-import com.isabelle.flash.fab.FloatingActionButton;
+import android.support.design.widget.FloatingActionButton;
 import com.isabelle.flash.models.Category;
 
 import java.util.ArrayList;
@@ -42,9 +45,15 @@ public class CategoriesFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         //initialize FloatingActionButton and set colors
-//        buttonFab = (FloatingActionButton) view.findViewById(R.id.addNewCategory);
-//        buttonFab.setColor((getResources().getColor(R.color.action_bar_color)));
-//        buttonFab.setTextColor(getResources().getColor(R.color.action_bar_text_color));
+        buttonFab = (FloatingActionButton) view.findViewById(R.id.addNewCategory);
+        buttonFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //action - add category
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+            }
+        });
 
         //initialize recycler view from fragment_category
         recyclerView = view.findViewById(R.id.list_cards);
