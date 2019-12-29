@@ -10,15 +10,18 @@ import android.widget.TextView;
 
 import com.isabelle.flash.R;
 import com.isabelle.flash.models.Category;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
 
-    private List<Category> categories;
+    private ArrayList<Category> categories;
+
 
     //constructor
     //context = activity
-    public CategoryAdapter(Context context, List<Category> list){
+    public CategoryAdapter(Context context, ArrayList<Category> list){
         categories = list;
     }
 
@@ -39,7 +42,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             itemView.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view) {
-
+                    //stuff here later
                 }
             });
         }
@@ -51,7 +54,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     public CategoryAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         //referring to fragment_categories
         //connected to horizontal layout/row
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_categories,viewGroup,false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.category_row_layout,viewGroup,false);
         return new ViewHolder(view);   //returns to ViewHolder with the layout of the category row
     }
 

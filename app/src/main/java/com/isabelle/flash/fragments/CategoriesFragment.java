@@ -1,6 +1,7 @@
 package com.isabelle.flash.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -8,11 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.isabelle.flash.ApplicationClass;
 import com.isabelle.flash.R;
 import com.isabelle.flash.adapters.CategoryAdapter;
 import com.isabelle.flash.fab.FloatingActionButton;
 import com.isabelle.flash.models.Category;
-import java.util.List;
+
+import java.util.ArrayList;
 
 public class CategoriesFragment extends Fragment {
 
@@ -21,7 +24,6 @@ public class CategoriesFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private View view;
 
-    private List<Category> categories;
     private FloatingActionButton buttonFab;
 
     public CategoriesFragment() {
@@ -31,8 +33,7 @@ public class CategoriesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        view = inflater.inflate(R.layout.fragment_categories,container,false);
-        return view;
+        return inflater.inflate(R.layout.fragment_categories,container,false);
     }
 
     @Override
@@ -64,7 +65,7 @@ public class CategoriesFragment extends Fragment {
 //            categories.add(category);
 //        }
 
-//        category_adapter = new CategoryAdapter(this.getActivity(),categories);
-//        recyclerView.setAdapter(category_adapter);
+        category_adapter = new CategoryAdapter(this.getActivity(),ApplicationClass.categories);
+        recyclerView.setAdapter(category_adapter);
     }
 }
