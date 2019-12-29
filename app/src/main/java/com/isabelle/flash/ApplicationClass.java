@@ -6,6 +6,11 @@ import com.isabelle.flash.models.Category;
 
 import java.util.ArrayList;
 
+
+//TO DELETE
+//remember to remove from manifest
+//First and last app to run, implements text view in categories and description
+
 public class ApplicationClass extends Application {
     public static ArrayList<Category> categories;
 
@@ -13,10 +18,10 @@ public class ApplicationClass extends Application {
     public void onCreate() {
         super.onCreate();
 
+        //creating instances of categories, adding to array list
         categories = new ArrayList<Category>();
-        categories.add(new Category("Category 1", "Category 1 Description"));
-        categories.add(new Category("Category 2", "Category 2 Description"));
-        categories.add(new Category("Category 3", "Category 3 Description"));
-
+        for (int i = 1; i < 6; i++) {
+            categories.add(new Category("Category " + i,"Category "+ i + " Description"));
+        }
     }
 }

@@ -25,6 +25,7 @@ public class CategoriesFragment extends Fragment {
     private View view;
 
     private FloatingActionButton buttonFab;
+    private ArrayList<Category> categories;
 
     public CategoriesFragment() {
 
@@ -53,19 +54,14 @@ public class CategoriesFragment extends Fragment {
         layoutManager = new LinearLayoutManager(this.getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        //TO DELETE
-        //new instances of example lists
-//        categories = new ArrayList<Category>();
-//        categories.add(new Category("Kanji", "Memorize new Japanese Kanji Characters"));
-//        categories.add(new Category("Vocabulary", "Rehearse Japanese words"));
 
         //creating instances of categories, adding to array list
-//        for (int i = 0; i < 10; i++) {
-//            Category category = new Category("Category " + i,"Category "+ i + " Description");
-//            categories.add(category);
-//        }
+        categories = new ArrayList<Category>();
+            for (int i = 1; i < 6; i++) {
+                categories.add(new Category("Category " + i,"Category "+ i + " Description"));
+            }
 
-        category_adapter = new CategoryAdapter(this.getActivity(),ApplicationClass.categories);
+        category_adapter = new CategoryAdapter(this.getActivity(),categories);
         recyclerView.setAdapter(category_adapter);
     }
 }
