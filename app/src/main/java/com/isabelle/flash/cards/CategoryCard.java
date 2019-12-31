@@ -32,7 +32,12 @@ public class CategoryCard extends Callback {
     private RectF buttonInstance = null;
     private RecyclerView.ViewHolder currentItemViewHolder = null;
     private static final float buttonWidth = 300;
-    //import class (dbHelper) to controll actions for buttons
+    //import class (dbHelper) to control actions for buttons
+
+    //button actions
+//    public SwipeController(SwipeControllerActions buttonsActions) {
+//        this.buttonsActions = buttonsActions;
+//    }
 
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
@@ -53,7 +58,7 @@ public class CategoryCard extends Callback {
     @Override
     public int convertToAbsoluteDirection(int flags, int layoutDirection) {
         if (swipeBack) {
-            swipeBack = false;
+            swipeBack = buttonShowedState != ButtonsState.GONE;
             return 0;
         }
         return super.convertToAbsoluteDirection(flags, layoutDirection);
@@ -79,7 +84,7 @@ public class CategoryCard extends Callback {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
         currentItemViewHolder = viewHolder;
-        drawButtons(c, viewHolder);
+        //drawButtons(c, viewHolder);
     }
 
     //check how much to left/right swiped item, change state to show buttons
@@ -93,7 +98,7 @@ public class CategoryCard extends Callback {
                     if (dX < -buttonWidth) {
                         buttonShowedState = ButtonsState.RIGHT_VISIBLE;
                     } else if (dX > buttonWidth) {
-                        buttonShowedState = buttonShowedState.LEFT_VISIBLE;
+                        buttonShowedState = ButtonsState.LEFT_VISIBLE;
                     }
 
                     if (buttonShowedState != ButtonsState.GONE) {
@@ -168,7 +173,7 @@ public class CategoryCard extends Callback {
         Paint p = new Paint();
 
         RectF leftButton = new RectF(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + buttonWidthWithoutPadding, itemView.getBottom());
-        p.setColor(Color.GREEN);
+        p.setColor(Color.BLUE);
         c.drawRoundRect(leftButton, corners, corners, p);
         drawText("EDIT", c, leftButton, p);
 
@@ -200,6 +205,4 @@ public class CategoryCard extends Callback {
             drawButtons(c, currentItemViewHolder);
         }
     }
-
-
 }

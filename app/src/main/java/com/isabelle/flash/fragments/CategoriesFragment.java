@@ -1,6 +1,8 @@
 package com.isabelle.flash.fragments;
 
+import android.graphics.Canvas;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -62,9 +64,17 @@ public class CategoriesFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         //initialize CategoryCard for swipe controller
-        CategoryCard cardController = new CategoryCard();
+        final CategoryCard cardController = new CategoryCard();
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper( (cardController));
         itemTouchHelper.attachToRecyclerView(recyclerView);
+
+        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration(){
+            @Override
+            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                cardController.onDraw(c);
+            }
+        });
+
 
         //creating instances of categories, adding to array list
         categories = new ArrayList<Category>();
