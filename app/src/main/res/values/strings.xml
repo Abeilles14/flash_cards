@@ -1,7 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Flash Cards</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- Card strings-->
+    <string name="category_name">Category Name</string>
+    <string name="create_category">Create Category</string>
+
+    <string name="new_cat_title">New Category</string>
+    <string name="new_deck_title">New Deck</string>
+    <string name="new_flashcard_title">New FlashCard</string>
+    <string name="deck_name">Deck Name</string>
+    <string name="flashcard_title">Flashcard Title</string>
+    <string name="flashcard_content">Flashcard Content...</string>
+    <string name="flashcard_answer">Flashcard Answer</string>
+    <string name="flashcard_content_dummy">Flashcard Content</string>
+    <string name="create_flashcard">Create Flashcard</string>
+    <string name="create_deck">Create Deck</string>
+
 
 
     <!-- Undo Controller-->

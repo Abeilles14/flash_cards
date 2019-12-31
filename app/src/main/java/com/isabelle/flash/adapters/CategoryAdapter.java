@@ -12,7 +12,6 @@ import com.isabelle.flash.R;
 import com.isabelle.flash.models.Category;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
 
@@ -29,14 +28,13 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     //if item in list gets clicked, will activate this class
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        TextView category_name, category_description;
+        TextView category_name;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             //retrieve views from xml
             //extracts individual itemView from ViewHolder, text
             category_name = itemView.findViewById(R.id.category_name);
-            category_description = itemView.findViewById(R.id.category_description);
 
             //on click
             itemView.setOnClickListener(new View.OnClickListener(){
@@ -54,7 +52,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     public CategoryAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         //referring to fragment_categories
         //connected to horizontal layout/row
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.category_row_layout,viewGroup,false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_category,viewGroup,false);
         return new ViewHolder(view);   //returns to ViewHolder with the layout of the category row
     }
 
@@ -66,8 +64,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         viewHolder.itemView.setTag(categories.get(i));  //use tag in onClick to check which clicked
 
         viewHolder.category_name.setText(categories.get(i).getCategoryName());
-        viewHolder.category_description.setText(categories.get(i).getDescription());
-    }
+}
 
     //get number of categories in array list
     @Override

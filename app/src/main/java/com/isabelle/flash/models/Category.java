@@ -9,22 +9,19 @@ public class Category extends CardItem{
     private String categoryName;
 
     private ArrayList<Deck> decks;      //list of decks of this category
-    private String description;
 
     public Category(){
     }
 
     //TODELETE
     //use to populate categories array for testing
-    public Category(String categoryName, String description) {
+    public Category(String categoryName) {
         this.categoryName = categoryName;
-        this.description = description;
     }
 
     public Category(String categoryName, ArrayList<Deck> decks) {
         super(categoryName);
         this.decks = decks;
-        this.description = "Description";
     }
 
     public String getCategoryName() {
@@ -33,13 +30,5 @@ public class Category extends CardItem{
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 }
