@@ -33,13 +33,12 @@ public class CategoryCard extends Callback {
     private RecyclerView.ViewHolder currentItemViewHolder = null;
     private static final float buttonWidth = 300;
 
-
     private Category category;
     private DbHelper helper;
 
-
     public CategoryCard(Context context) {
         this.helper = new DbHelper(context);
+        ///this.category = category;
     }
 
     public Category getCategory() {
@@ -50,18 +49,27 @@ public class CategoryCard extends Callback {
         this.category = category;
     }
 
+    public long getId() {
+        return category.getId();
+    }
+
+    public void setId(long id) {
+        this.category.setId(id);
+    }
+
     //TODO
     //edit button clicked
     public void onLeftClicked(RecyclerView.ViewHolder viewHolder) {
         //edit title, then refresh list
         helper.updateCategory(category);
+        //set title
     }
 
     //delete button clicked
     public void onRightClicked(RecyclerView.ViewHolder viewHolder) {
         //delete from db, then refresh list
         helper.deleteItem(category.getId(), DbHelper.CATEGORIES_TABLE);
-        //refresh... adapter? done in fragment?
+        //refresh... adapter? done in fragment?`
     }
 
 
@@ -199,8 +207,9 @@ public class CategoryCard extends Callback {
     private void drawButtons(Canvas c, RecyclerView.ViewHolder viewHolder) {
         View itemView = viewHolder.itemView;
 
+        float buttonPadding = 2;
         float buttonMarginHorizontal = viewHolder.itemView.getResources().getDimension(R.dimen.button_horizontal_margin);
-        float buttonMarginVertical = viewHolder.itemView.getResources().getDimension(R.dimen.button_vertical_margin);
+        float buttonMarginVertical = viewHolder.itemView.getResources().getDimension(R.dimen.button_vertical_margin)+buttonPadding;
 
         Drawable ic_edit = viewHolder.itemView.getResources().getDrawable(R.drawable.ic_edit);
         Drawable ic_delete = viewHolder.itemView.getResources().getDrawable(R.drawable.ic_delete);
