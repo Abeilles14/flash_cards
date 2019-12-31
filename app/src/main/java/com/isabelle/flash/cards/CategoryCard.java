@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.isabelle.flash.R;
 import com.isabelle.flash.database.DbHelper;
 import com.isabelle.flash.models.Category;
 
@@ -166,19 +167,22 @@ public class CategoryCard extends Callback {
 
     //draw the buttons
     private void drawButtons(Canvas c, RecyclerView.ViewHolder viewHolder) {
-        float buttonWidthWithoutPadding = buttonWidth - 20;
-        float corners = 16;
-
         View itemView = viewHolder.itemView;
+
+        float buttonMarginHorizontal = viewHolder.itemView.getResources().getDimension(R.dimen.button_horizontal_margin);
+        float buttonMarginVertical= viewHolder.itemView.getResources().getDimension(R.dimen.button_vertical_margin);
+
+        float corners = 16;
         Paint p = new Paint();
 
-        RectF leftButton = new RectF(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + buttonWidthWithoutPadding, itemView.getBottom());
-        p.setColor(Color.BLUE);
+        //need buttons to match card_category layout
+        RectF leftButton = new RectF(itemView.getLeft()+buttonMarginHorizontal, itemView.getTop()+buttonMarginVertical, itemView.getLeft()+buttonWidth, itemView.getBottom()-buttonMarginVertical);
+        p.setColor(viewHolder.itemView.getResources().getColor(R.color.edit_card));
         c.drawRoundRect(leftButton, corners, corners, p);
         drawText("EDIT", c, leftButton, p);
 
-        RectF rightButton = new RectF(itemView.getRight()-buttonWidthWithoutPadding, itemView.getTop(), itemView.getRight(), itemView.getBottom());
-        p.setColor(Color.RED);
+        RectF rightButton = new RectF(itemView.getRight()-buttonWidth, itemView.getTop()+buttonMarginVertical, itemView.getRight()-buttonMarginHorizontal, itemView.getBottom()-buttonMarginVertical);
+        p.setColor(viewHolder.itemView.getResources().getColor(R.color.delete_card));
         c.drawRoundRect(rightButton, corners, corners, p);
         drawText("DELETE", c, rightButton, p);
 
@@ -190,6 +194,7 @@ public class CategoryCard extends Callback {
         }
     }
 
+    //replace by icons later?
     private void drawText(String text, Canvas c, RectF button, Paint p) {
         float textSize = 60;
         float textWidth = p.measureText(text);

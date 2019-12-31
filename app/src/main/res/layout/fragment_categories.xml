@@ -23,7 +23,7 @@
         android:layout_width="72dip"
         android:layout_height="72dip"
         android:layout_gravity="bottom|end"
-        android:layout_marginRight="@dimen/activity_vertical_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginBottom="@dimen/activity_horizontal_margin"
         android:shadowDx="5"
         android:shadowDy="7"

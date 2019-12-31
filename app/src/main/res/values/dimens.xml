@@ -10,4 +10,8 @@
     <dimen name="card_background_default_radius">2dip</dimen>
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
     <dimen name="nav_header_height">176dp</dimen>
+
+    <!-- Card Buttons -->
+    <dimen name="button_horizontal_margin">16dp</dimen>
+    <dimen name="button_vertical_margin">10dp</dimen>
 </resources>

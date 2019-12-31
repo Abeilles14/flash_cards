@@ -7,4 +7,6 @@
     <color name="action_bar_text_color">#fafafa</color>
     <color name="drawer_background">#fafafa</color>
     <color name="drawer_selected">#ff9100</color>
+    <color name="edit_card">#3ca35f</color>
+    <color name="delete_card">#e34949</color>
 </resources>
