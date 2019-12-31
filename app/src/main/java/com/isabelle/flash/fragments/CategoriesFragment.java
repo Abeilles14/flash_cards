@@ -2,7 +2,6 @@ package com.isabelle.flash.fragments;
 
 import android.graphics.Canvas;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +19,7 @@ import com.isabelle.flash.models.Category;
 
 import java.util.ArrayList;
 
-public class CategoriesFragment extends Fragment {
+public class CategoriesFragment extends Fragment implements View.OnClickListener{
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter category_adapter;
@@ -29,6 +28,7 @@ public class CategoriesFragment extends Fragment {
 
     private FloatingActionButton buttonFab;
     private ArrayList<Category> categories;
+    CategoryCard cardController = null;
 
     public CategoriesFragment() {
 
@@ -64,7 +64,9 @@ public class CategoriesFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         //initialize CategoryCard for swipe controller
-        final CategoryCard cardController = new CategoryCard();
+        //implement Swipe Buttons
+        cardController = new CategoryCard(getContext());
+
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper( (cardController));
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
@@ -75,15 +77,30 @@ public class CategoriesFragment extends Fragment {
             }
         });
 
-
         //creating instances of categories, adding to array list
+//        for (int i = 0; i < categories.size(); i++) {
+//            CategoryCard card = new CategoryCard(getActivity());
+//            card.setId(String.valueOf(categories.get(i).getId()));
+//            card.setCategory(categories.get(i));
+//            mCardsList.add(card);
+//        }
         categories = new ArrayList<Category>();
             for (int i = 1; i < 9; i++) {
                 //new CategoryCard card, setId, setCategory, add to array
                 categories.add(new Category("Category " + i));
             }
 
+        //initialize adapter
         category_adapter = new CategoryAdapter(this.getActivity(),categories);
         recyclerView.setAdapter(category_adapter);
+    }
+
+    //TODO
+    //on click
+    @Override
+    public void onClick(View v) {
+//        if(v.getId() == buttonFab.getId()) {
+//            ((MainActivity) getActivity()).displayView(MainActivity.NEW_CATEGORY_FRAG, null);
+//        }
     }
 }

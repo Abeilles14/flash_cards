@@ -2,10 +2,9 @@ package com.isabelle.flash.cards;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.support.annotation.NonNull;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.helper.ItemTouchHelper.Callback;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
@@ -33,12 +32,38 @@ public class CategoryCard extends Callback {
     private RectF buttonInstance = null;
     private RecyclerView.ViewHolder currentItemViewHolder = null;
     private static final float buttonWidth = 300;
-    //import class (dbHelper) to control actions for buttons
 
-    //button actions
-//    public SwipeController(SwipeControllerActions buttonsActions) {
-//        this.buttonsActions = buttonsActions;
-//    }
+
+    private Category category;
+    private DbHelper helper;
+
+
+    public CategoryCard(Context context) {
+        this.helper = new DbHelper(context);
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    //TODO
+    //edit button clicked
+    public void onLeftClicked(RecyclerView.ViewHolder viewHolder) {
+        //edit title, then refresh list
+        helper.updateCategory(category);
+    }
+
+    //delete button clicked
+    public void onRightClicked(RecyclerView.ViewHolder viewHolder) {
+        //delete from db, then refresh list
+        helper.deleteItem(category.getId(), DbHelper.CATEGORIES_TABLE);
+        //refresh... adapter? done in fragment?
+    }
+
 
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
@@ -52,7 +77,7 @@ public class CategoryCard extends Callback {
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        //do something when swiped
+        //do nothing
     }
 
     //blocks swipe
@@ -142,14 +167,19 @@ public class CategoryCard extends Callback {
                     swipeBack = false;
 
                     //button actions
-//                    if (buttonsActions != null && buttonInstance != null && buttonInstance.contains(event.getX(), event.getY())) {
-//                        if (buttonShowedState == ButtonsState.LEFT_VISIBLE) {
-//                            buttonsActions.onLeftClicked(viewHolder.getAdapterPosition());
-//                        }
-//                        else if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
-//                            buttonsActions.onRightClicked(viewHolder.getAdapterPosition());
-//                        }
-//                    }
+                    //removed buttonsActions != null && from if??
+                    if (buttonInstance != null && buttonInstance.contains(event.getX(), event.getY())) {
+                        if (buttonShowedState == ButtonsState.LEFT_VISIBLE) {
+                            //on left button clicked, edit
+                            //buttonsActions.onLeftClicked(viewHolder.getAdapterPosition());
+                            onLeftClicked(viewHolder);
+                        }
+                        else if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
+                            //on right button clicked, delete
+                            //buttonsActions.onRightClicked(viewHolder.getAdapterPosition());
+                            onRightClicked(viewHolder);
+                        }
+                    }
                     buttonShowedState = ButtonsState.GONE;
                     currentItemViewHolder = null;
                 }
@@ -170,21 +200,25 @@ public class CategoryCard extends Callback {
         View itemView = viewHolder.itemView;
 
         float buttonMarginHorizontal = viewHolder.itemView.getResources().getDimension(R.dimen.button_horizontal_margin);
-        float buttonMarginVertical= viewHolder.itemView.getResources().getDimension(R.dimen.button_vertical_margin);
+        float buttonMarginVertical = viewHolder.itemView.getResources().getDimension(R.dimen.button_vertical_margin);
+
+        Drawable ic_edit = viewHolder.itemView.getResources().getDrawable(R.drawable.ic_edit);
+        Drawable ic_delete = viewHolder.itemView.getResources().getDrawable(R.drawable.ic_delete);
 
         float corners = 16;
         Paint p = new Paint();
 
-        //need buttons to match card_category layout
-        RectF leftButton = new RectF(itemView.getLeft()+buttonMarginHorizontal, itemView.getTop()+buttonMarginVertical, itemView.getLeft()+buttonWidth, itemView.getBottom()-buttonMarginVertical);
+        //edit button
+        RectF leftButton = new RectF(itemView.getLeft() + buttonMarginHorizontal, itemView.getTop() + buttonMarginVertical, itemView.getLeft() + buttonWidth, itemView.getBottom() - buttonMarginVertical);
         p.setColor(viewHolder.itemView.getResources().getColor(R.color.edit_card));
         c.drawRoundRect(leftButton, corners, corners, p);
-        drawText("EDIT", c, leftButton, p);
+        drawIcon(ic_edit,c, leftButton);
 
-        RectF rightButton = new RectF(itemView.getRight()-buttonWidth, itemView.getTop()+buttonMarginVertical, itemView.getRight()-buttonMarginHorizontal, itemView.getBottom()-buttonMarginVertical);
+        //delete button
+        RectF rightButton = new RectF(itemView.getRight() - buttonWidth, itemView.getTop() + buttonMarginVertical, itemView.getRight() - buttonMarginHorizontal, itemView.getBottom() - buttonMarginVertical);
         p.setColor(viewHolder.itemView.getResources().getColor(R.color.delete_card));
         c.drawRoundRect(rightButton, corners, corners, p);
-        drawText("DELETE", c, rightButton, p);
+        drawIcon(ic_delete,c, rightButton);
 
         buttonInstance = null;
         if (buttonShowedState == ButtonsState.LEFT_VISIBLE) {
@@ -194,15 +228,17 @@ public class CategoryCard extends Callback {
         }
     }
 
-    //replace by icons later?
-    private void drawText(String text, Canvas c, RectF button, Paint p) {
-        float textSize = 60;
-        float textWidth = p.measureText(text);
-        p.setColor(Color.WHITE);
-        p.setAntiAlias(true);
-        p.setTextSize(textSize);
+    //draw icon in middle of button
+    private void drawIcon(Drawable icon, Canvas c, RectF button) {
+        //icon size
+        int ic_width = icon.getMinimumWidth() + 30;
+        int ic_height = icon.getMinimumHeight() + 30;
+        //icon top left corner position
+        int left = (int) button.centerX()-(ic_width/2);
+        int top = (int) button.centerY()-(ic_height/2);
 
-        c.drawText(text, button.centerX() - (textWidth / 2), button.centerY() + (textSize / 2), p);
+        icon.setBounds(left, top, left+ic_width, top+ic_height);
+        icon.draw(c);
     }
 
     public void onDraw(Canvas c) {
@@ -210,4 +246,5 @@ public class CategoryCard extends Callback {
             drawButtons(c, currentItemViewHolder);
         }
     }
+
 }
