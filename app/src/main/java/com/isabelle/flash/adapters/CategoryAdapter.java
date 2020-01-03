@@ -13,6 +13,8 @@ import com.isabelle.flash.models.Category;
 
 import java.util.ArrayList;
 
+import static java.sql.Types.NULL;
+
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
 
     private ArrayList<Category> categories;

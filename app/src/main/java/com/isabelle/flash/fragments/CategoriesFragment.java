@@ -40,6 +40,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     private FloatingActionButton buttonFab;
     private ArrayList<Category> categories;
     CategoryCard cardController = null;
+    DbHelper dbHelper;
 
     //edit/add dialog
     private AlertDialog.Builder alertDialog;
@@ -60,6 +61,8 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        dbHelper = new DbHelper(getActivity());
 
         //initialize FloatingActionButton and set colors
         buttonFab = (FloatingActionButton) view.findViewById(R.id.addNewCategory);
@@ -88,28 +91,47 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
             }
         });
 
-        //categories = new ArrayList<Category>();
-
-        //creating instances of categories, adding to array list
-//        for (int i = 0; i < categories.size(); i++) {
-//
-//            cardController = new CategoryCard(getActivity(), categories.get(i));
-//
-//            cardController.setId(categories.get(i).getId());
-//            cardController.setCategory(categories.get(i));
-//            categories.add(category);
-//        }
-
+        //new array list of categories
         categories = new ArrayList<Category>();
-        for (int i = 1; i < 9; i++) {
-            //new CategoryCard card, setId, setCategory, add to array
-            categories.add(new Category("Category " + i));
-        }
 
         //initialize adapter
         category_adapter = new CategoryAdapter(this.getActivity(), categories);
         recyclerView.setAdapter(category_adapter);
 
+
+        //initialize dialogue box and adding categories
+        // initDialog();
+
+        //on create fragment/refresh:
+        //retrieve categories from db, populate categories array
+        //update adapter
+        categories = dbHelper.getAllCategories();
+        category_adapter.notifyDataSetChanged();
+
+
+        // For new category:
+        // 1. update db
+        // 2. update adapter
+        ////////////////////
+        //creating instances of categories, adding to array list
+
+        for (int i = 0; i < categories.size(); i++) {
+            System.out.println("title: "+categories.get(i).getTitle());
+            System.out.println("title: "+categories.get(i).getId());
+            cardController = new CategoryCard(getActivity());
+
+            cardController.setCategory(categories.get(i));
+            category_adapter.notifyDataSetChanged();
+        }
+
+///////////
+//        for (int i = 1; i < 9; i++) {
+//            //new CategoryCard card, setId, setCategory, add to array
+//            categories.add(new Category("Category " + i));
+//            category_adapter.notifyDataSetChanged();
+//        }
+
+        //initialize dialogue box and adding categories
         initDialog();
     }
 
@@ -128,9 +150,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                 alertDialog.show();
                 break;
             //case category, on click category go to fragment
-//            if(v.getId() == buttonFab.getId()) {
-//            ((MainActivity) getActivity()).displayView(MainActivity.NEW_CATEGORY_FRAG, null);
-//        }
+
         }
     }
 
@@ -150,11 +170,10 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                     //countries.set(edit_position, et_category.getText().toString());
                     //category_adapter.notifyDataSetChanged();    //refresh recyclerview
 
-
-                    DbHelper dbHelper = new DbHelper(getActivity());
+                    //new helper?
                     Category category = new Category();
 
-                    //if textfield not empty
+                    //if textfield not empty, try catch
                     if (!et_category.getText().toString().isEmpty()) {
                         category.setTitle(et_category.getText().toString());    //set category title
                         try {
@@ -163,8 +182,10 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
 
                             //open fragment?? add new category? add new card?
                             //getActivity().displayView(new CategoriesFragment(), null);
-                            category_adapter.notifyDataSetChanged();
-                            //category_adapter.notifyItemInserted();
+                            //category_adapter.notifyDataSetChanged();
+                            categories.add(category);
+                            category_adapter.notifyDataSetChanged();    //doesnt do anything?
+                            System.out.println(categories.size());
 
                             //refresh?
                         } catch (Exception ex) {

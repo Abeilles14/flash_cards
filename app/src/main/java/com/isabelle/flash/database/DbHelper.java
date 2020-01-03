@@ -91,6 +91,7 @@ public class DbHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();     //create new content values with key value pairs
         values.put(TITLE, category.getTitle());         //insert title for category
 
+        System.out.println("category created");
         return db.insert(CATEGORIES_TABLE, null, values);
     }
 
@@ -167,6 +168,7 @@ public class DbHelper extends SQLiteOpenHelper {
         ArrayList<Category> categories = new ArrayList<Category>();
         Cursor cursor = db.rawQuery(query, null);
         if(cursor != null) {
+            cursor.moveToFirst();       //may be wrong?
             do{
                 Category category = new Category();
                 category.setId(cursor.getLong(cursor.getColumnIndex(_ID)));
