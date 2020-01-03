@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +18,19 @@ import com.isabelle.flash.adapters.CategoryAdapter;
 
 import android.support.design.widget.FloatingActionButton;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.isabelle.flash.cards.CategoryCard;
+import com.isabelle.flash.database.DbHelper;
 import com.isabelle.flash.models.Category;
+import com.isabelle.flash.navDrawer.MainActivity;
+import com.isabelle.flash.navDrawer.Utils;
 
 import java.util.ArrayList;
 
 public class CategoriesFragment extends Fragment implements View.OnClickListener {
+
+    private static final String LOG_TAG = "Category Fragment";
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter category_adapter;
@@ -116,37 +123,67 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
             case R.id.addNewCategory:
                 removeView();
                 add = true;
-                alertDialog.setTitle("Add Category");
-                et_category.setText("");
+                alertDialog.setTitle("Add Category");       //dialog box title
+                et_category.setText("");        //initial text on edit bar
                 alertDialog.show();
                 break;
+            //case category, on click category go to fragment
+//            if(v.getId() == buttonFab.getId()) {
+//            ((MainActivity) getActivity()).displayView(MainActivity.NEW_CATEGORY_FRAG, null);
+//        }
         }
     }
 
+    //add new categort
     private void initDialog() {
         alertDialog = new AlertDialog.Builder(getActivity());
         view = getLayoutInflater().inflate(R.layout.fragment_new_category, null);
         alertDialog.setView(view);
+
         alertDialog.setPositiveButton("Save", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (add) {
                     add = false;
-                    //add
-                    //adapter.addItem(et_category.getText().toString());
-                    dialog.dismiss();
-                } else {
-                    //edit
-                    //set categories array
+                    //add to category
+                    //category_adapter.addItem(et_category.getText().toString());
                     //countries.set(edit_position, et_category.getText().toString());
-                    //notify adapter, refresh
-                    category_adapter.notifyDataSetChanged();
+                    //category_adapter.notifyDataSetChanged();    //refresh recyclerview
+
+
+                    DbHelper dbHelper = new DbHelper(getActivity());
+                    Category category = new Category();
+
+                    //if textfield not empty
+                    if (!et_category.getText().toString().isEmpty()) {
+                        category.setTitle(et_category.getText().toString());    //set category title
+                        try {
+                            Utils.hideKeyboard(getActivity());
+                            dbHelper.createCategory(category);  //db create new category title
+
+                            //open fragment?? add new category? add new card?
+                            //getActivity().displayView(new CategoriesFragment(), null);
+                            category_adapter.notifyDataSetChanged();
+                            //category_adapter.notifyItemInserted();
+
+                            //refresh?
+                        } catch (Exception ex) {
+                            Log.i(LOG_TAG, "Could not create category");
+                        }
+                    } else {        //if textfield empty, toast
+                        Toast.makeText(getActivity(), "Category MUST have a title.", Toast.LENGTH_LONG).show();
+                    }
+
+
+                    dialog.dismiss();
+                } else {      //not sure what this does
+                    //countries.set(edit_position, et_category.getText().toString());
+                    category_adapter.notifyDataSetChanged();    //refresh recyclerview
                     dialog.dismiss();
                 }
-
             }
         });
-        et_category = (EditText) view.findViewById(R.id.et_country);
+        et_category = (EditText) view.findViewById(R.id.et_country);    //replaces dialog text by typed text
     }
 
     //close dialog box
@@ -155,13 +192,6 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
             ((ViewGroup) view.getParent()).removeView(view);
         }
     }
-
-
-//    @Override
-//    public void onClick(View v) {
-//        if(v.getId() == buttonFab.getId()) {
-//            ((MainActivity) getActivity()).displayView(MainActivity.NEW_CATEGORY_FRAG, null);
-//        }
 }
 
 
