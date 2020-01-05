@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 public class Category extends CardItem{
 
-
-    //TODELETE
     private String categoryName;
 
     private ArrayList<Deck> decks;      //list of decks of this category

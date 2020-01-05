@@ -38,7 +38,6 @@ public class CategoryCard extends Callback {
 
     public CategoryCard(Context context) {
         this.helper = new DbHelper(context);
-        ///this.category = category;
     }
 
     public void setCategory(Category category) {
