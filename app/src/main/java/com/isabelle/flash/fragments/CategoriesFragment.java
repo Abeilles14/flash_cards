@@ -91,36 +91,8 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
             }
         });
 
-        //new array list of categories
-        categories = new ArrayList<Category>();
-        //categories = new ArrayList<Category>(dbHelper.getAllCategories());
-
-        //initialize adapter
-//        category_adapter = new CategoryAdapter(this.getActivity(), categories);
-//        recyclerView.setAdapter(category_adapter);
-
-        //on create fragment/refresh:
-        //retrieve categories from db, populate categories array
-        //update adapter
-
-        // For new category:
-        // 1. update db
-        // 2. get all categories from db again
-        // 3. update adapter/cardcontroller(categoryCard)
-        ////////////////////
-        //creating instances of categories, adding to array list
-
-
-        for (int i = 1; i < 9; i++) {
-            //new CategoryCard card, setId, setCategory, add to array
-            categories.add(new Category("Category " + i));
-        }
-
-//        for (int i = 0; i < categories.size(); i++) {
-//            System.out.println("title: "+categories.get(i).getTitle());
-//            System.out.println("title: "+categories.get(i).getId());
-//
-//        }
+        //retrieve array of categories from database
+        categories = new ArrayList<Category>(dbHelper.getAllCategories());
 
         //initialize adapter? (after categories array set
         category_adapter = new CategoryAdapter(this.getActivity(), categories);

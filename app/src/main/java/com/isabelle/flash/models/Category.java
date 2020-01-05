@@ -14,6 +14,7 @@ public class Category extends CardItem{
     //TODELETE
     //use to populate categories array for testing
     public Category(String categoryName) {
+        super(categoryName);
         this.categoryName = categoryName;
     }
 
@@ -22,11 +23,11 @@ public class Category extends CardItem{
         this.decks = decks;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public ArrayList<Deck> getDecks() {
+        return decks;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public void setDecks(ArrayList<Deck> decks) {
+        this.decks = decks;
     }
 }
