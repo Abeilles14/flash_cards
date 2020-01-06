@@ -88,27 +88,14 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
 
             @Override
             public void onRightClicked(int position) {
-                //TODO fix delete category bug
-                System.out.println("Delete button clicked");
-                //refresh list
-                categories = new ArrayList<>(dbHelper.getAllCategories());
-
                 //delete from database using position of card
                 dbHelper.deleteItem(categories.get(position).getId(), DbHelper.CATEGORIES_TABLE);
+                categories.remove(position);
 
-                ///////////test
-                //refresh list
-                //TODO try deleting directly from array, remove db getAll and adapter
-                //categories.remove(position);
-                categories = new ArrayList<>(dbHelper.getAllCategories());
-
-                //may not be needed? simpler way?
+                //TODO simplify/replace?
                 category_adapter = new CategoryAdapter(getActivity(), categories);
                 recyclerView.setAdapter(category_adapter);
-                ////////////
-
-                System.out.println("adapter button called");
-//                category_adapter.notifyItemRemoved(position);
+//              category_adapter.notifyItemRemoved(position);
             }
         });
 
@@ -174,11 +161,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                             //refresh category list
                             //NOTE: refreshing array by getting through db doesn't refresh view, but .add() does
                             categories.add(category);
-
-                            //category_adapter.notifyDataSetChanged();    //doesnt do anything?
-                            System.out.println(categories.size());
-
-                            //refresh?
+                            //category_adapter.notifyDataSetChanged();
                         } catch (Exception ex) {
                             Log.i(LOG_TAG, "Could not create category");
                         }
