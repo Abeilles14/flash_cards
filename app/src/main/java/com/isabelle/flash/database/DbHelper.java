@@ -323,7 +323,6 @@ public class DbHelper extends SQLiteOpenHelper {
         return flashCards;
     }
 
-    //TODO fix updates
     ////////UPDATE
     //category
     public long updateCategory(Category category) {
@@ -337,22 +336,18 @@ public class DbHelper extends SQLiteOpenHelper {
     public long updateDeck(Deck deck) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(_ID, deck.getId());
         values.put(TITLE, deck.getTitle());
-        values.put(BELONGS_TO, deck.getCategory().getId());
-        return db.insert(DECKS_TABLE, null, values);
+        return db.update(DECKS_TABLE, values, _ID + " = " +deck.getId(), null);
     }
 
     //flashcard
     public long  updateFlashCard(FlashCard flashCard) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(_ID, flashCard.getId());
         values.put(TITLE, flashCard.getTitle());
         values.put(FLASHCARD_CONTENT, flashCard.getContent());
         values.put(FLASHCARD_ANSWER, flashCard.getAnswer());
-        values.put(BELONGS_TO, flashCard.getDeck().getId());
-        return db.insert(FLASHCARDS_TABLE,null, values);
+        return db.update(FLASHCARDS_TABLE, values, _ID + " = " +flashCard.getId(), null);
     }
 
     ////////DELETE

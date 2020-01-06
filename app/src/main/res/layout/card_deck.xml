@@ -30,20 +30,20 @@
             android:paddingBottom="8dip">
 
             <ImageView
-                android:id="@+id/ic_category"
+                android:id="@+id/ic_deck"
                 android:layout_width="72dip"
                 android:layout_height="72dip"
-                card:srcCompat="@drawable/ic_categories"
-                tools:srcCompat="@drawable/ic_categories" />
+                card:srcCompat="@drawable/ic_decks"
+                tools:srcCompat="@drawable/ic_decks" />
 
             <TextView
-                android:id="@+id/category_name"
+                android:id="@+id/deck_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_vertical_margin"
                 android:layout_marginLeft="@dimen/activity_vertical_margin"
                 android:fontFamily="sans-serif-light"
-                android:text="@string/category_name"
+                android:text="@string/deck_name"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textSize="28sp" />
         </LinearLayout>

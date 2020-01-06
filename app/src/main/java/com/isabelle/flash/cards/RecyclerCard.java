@@ -24,7 +24,7 @@ enum ButtonsState {
 
 //tells helper what kind of actions recycler should handle (L/R)
 //what to do on given actions
-public class CategoryCard extends Callback {
+public class RecyclerCard extends Callback {
 
     private boolean swipeBack = false;
     private ButtonsState buttonShowedState = ButtonsState.GONE;
@@ -34,7 +34,7 @@ public class CategoryCard extends Callback {
 
     private SwipeControllerActions buttonsActions;
 
-    public CategoryCard(SwipeControllerActions buttonsActions) {
+    public RecyclerCard(SwipeControllerActions buttonsActions) {
         this.buttonsActions = buttonsActions;
     }
 
@@ -129,7 +129,7 @@ public class CategoryCard extends Callback {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    CategoryCard.super.onChildDraw(c, recyclerView, viewHolder, 0F, dY, actionState, isCurrentlyActive);
+                    RecyclerCard.super.onChildDraw(c, recyclerView, viewHolder, 0F, dY, actionState, isCurrentlyActive);
                     recyclerView.setOnTouchListener(new View.OnTouchListener() {
                         @Override
                         public boolean onTouch(View v, MotionEvent event) {

@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,52 +14,49 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.isabelle.flash.R;
-import com.isabelle.flash.adapters.CategoryAdapter;
-
-import android.support.design.widget.FloatingActionButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.isabelle.flash.R;
+import com.isabelle.flash.adapters.DeckAdapter;
 import com.isabelle.flash.cards.RecyclerCard;
 import com.isabelle.flash.controllers.SwipeControllerActions;
 import com.isabelle.flash.database.DbHelper;
-import com.isabelle.flash.models.Category;
 import com.isabelle.flash.models.Deck;
 import com.isabelle.flash.navDrawer.Utils;
-
 import java.util.ArrayList;
 
-public class CategoriesFragment extends Fragment implements View.OnClickListener {
+public class DecksFragment extends Fragment implements View.OnClickListener {
 
-    private static final String LOG_TAG = "Category Fragment";
+    private static final String LOG_TAG = "Deck Fragment";
 
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter category_adapter;
+    private RecyclerView.Adapter deck_adapter;
     private RecyclerView.LayoutManager layoutManager;
     private View view;
 
     private FloatingActionButton buttonFab;
-    private ArrayList<Category> categories;
+    private ArrayList<Deck> decks;
     private RecyclerCard cardController = null;
     private DbHelper dbHelper;
 
-    //edit/add dialog
     private AlertDialog.Builder alertDialog;
-    private EditText et_category;
+    private EditText et_deck;
     private Toast toast;
     private boolean add = false;
     private int edit_position;
 
-    public CategoriesFragment() {
+    private String category_title;
+    private long category_id;
+
+    public DecksFragment() {
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        return inflater.inflate(R.layout.fragment_categories, container, false);
+        return inflater.inflate(R.layout.fragment_decks, container, false);
     }
 
     @Override
@@ -66,10 +64,10 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         super.onActivityCreated(savedInstanceState);
 
         //initialize FloatingActionButton and set colors
-        buttonFab = (FloatingActionButton) view.findViewById(R.id.addNewCategory);
+        buttonFab = (FloatingActionButton) view.findViewById(R.id.addNewDeck);
         buttonFab.setOnClickListener(this);
 
-        //initialize recycler view from fragment_category
+        //initialize recycler view from fragment_deck
         recyclerView = view.findViewById(R.id.list_cards);
         recyclerView.setHasFixedSize(true);
 
@@ -77,19 +75,23 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         layoutManager = new LinearLayoutManager(this.getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        dbHelper = new DbHelper(getActivity());
+        dbHelper = new DbHelper(getActivity()); //supposed to be declared after bundles?
+        Bundle b = getArguments();
+        category_title = b.getString(dbHelper.TITLE);
+        category_id = b.getLong(dbHelper._ID);
+        getActivity().setTitle(category_title);
 
-        //initialize CategoryCard for swipe controller
+        //initialize deckCard for swipe controller
         //implement Swipe Buttons
         cardController = new RecyclerCard(new SwipeControllerActions() {
             //edit
             @Override
             public void onLeftClicked(int position) {
-                //TODO edit category
+                //TODO edit deck
                 removeView();
                 edit_position = position;
-                alertDialog.setTitle("Edit Category");
-                et_category.setText(categories.get(position).getTitle());
+                alertDialog.setTitle("Edit deck");
+                et_deck.setText(decks.get(position).getTitle());
                 alertDialog.show();
             }
 
@@ -97,10 +99,10 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
             @Override
             public void onRightClicked(int position) {
                 //delete from database using position of card
-                dbHelper.deleteItem(categories.get(position).getId(), DbHelper.CATEGORIES_TABLE);
-                categories.remove(position);
+                dbHelper.deleteItem(decks.get(position).getId(), DbHelper.DECKS_TABLE);
+                decks.remove(position);
                 //refresh
-                category_adapter.notifyItemRemoved(position);
+                deck_adapter.notifyItemRemoved(position);
             }
         });
 
@@ -114,85 +116,85 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
             }
         });
 
-        //retrieve array of categories from database
-        categories = new ArrayList<>(dbHelper.getAllCategories());
+        //retrieve array of decks from database
+        decks = new ArrayList<Deck>(dbHelper.getAllDecksByCategoryId(category_id));
 
-        //initialize adapter? (after categories array set
-        category_adapter = new CategoryAdapter(this.getActivity(), categories);
-        recyclerView.setAdapter(category_adapter);
-        //initialize dialogue box and adding categories
+        //initialize adapter? (after decks array set
+        deck_adapter = new DeckAdapter(this.getActivity(), decks);
+        recyclerView.setAdapter(deck_adapter);
+        //initialize dialogue box and adding decks
         initDialog();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.addNewCategory:
+            case R.id.addNewDeck:
                 removeView();
                 add = true;
-                alertDialog.setTitle("Add Category");       //dialog box title
-                et_category.setText("");        //initial text on edit bar
+                alertDialog.setTitle("Add deck");       //dialog box title
+                et_deck.setText("");        //initial text on edit bar
                 alertDialog.show();
                 break;
             //TODO
-            //case id category card, on click category go to fragment
+            //case id deck card, on click deck go to fragment
         }
     }
 
-    //add new category
+    //add new deck
     private void initDialog() {
         alertDialog = new AlertDialog.Builder(getActivity());
-        view = getLayoutInflater().inflate(R.layout.fragment_new_category, null);
+        view = getLayoutInflater().inflate(R.layout.fragment_new_deck, null);
         alertDialog.setView(view);
 
         alertDialog.setPositiveButton("Save", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //adding category
+                //adding deck
                 if (add) {
                     add = false;
-                    Category category = new Category();
+                    Deck deck = new Deck();
                     //if textfield not empty, try catch
-                    if (!et_category.getText().toString().isEmpty()) {
-                        category.setTitle(et_category.getText().toString());    //set category title
+                    if (!et_deck.getText().toString().isEmpty()) {
+                        deck.setTitle(et_deck.getText().toString());    //set deck title
                         try {
                             Utils.hideKeyboard(getActivity());
-                            dbHelper.createCategory(category);  //db create new category title
-                            categories = new ArrayList<>(dbHelper.getAllCategories());
+                            dbHelper.createDeck(deck,category_id);  //db create new deck title
+                            decks = new ArrayList<Deck>(dbHelper.getAllDecksByCategoryId(category_id));
 
                             //refresh
-                            category_adapter.notifyItemInserted(categories.size());
+                            deck_adapter.notifyItemInserted(decks.size());
 
                         } catch (Exception ex) {
-                            Log.i(LOG_TAG, "Could not create category");
+                            Log.i(LOG_TAG, "Could not create deck");
                         }
                     } else {        //if textfield empty, toast
-                        showToast(R.string.category_name_missing);
+                        showToast(R.string.deck_name_missing);
                     }
 
-                    //editing category
+                    //editing deck
                 } else {
                     //if textfield not empty, try catch
-                    if (!et_category.getText().toString().isEmpty()) {
+                    if (!et_deck.getText().toString().isEmpty()) {
                         try {
                             Utils.hideKeyboard(getActivity());
-                            categories.get(edit_position).setTitle(et_category.getText().toString());
-                            dbHelper.updateCategory(categories.get(edit_position));
+                            decks.get(edit_position).setTitle(et_deck.getText().toString());
+                            dbHelper.updateDeck(decks.get(edit_position));
 
                             //refresh
-                            category_adapter.notifyItemChanged(edit_position);
+                            deck_adapter.notifyItemChanged(edit_position);
 
                         } catch (Exception ex) {
-                            Log.i(LOG_TAG, "Could not create category");
+                            Log.i(LOG_TAG, "Could not create deck");
                         }
                     } else {        //if textfield empty, toast
-                        showToast(R.string.category_name_missing);
+                        showToast(R.string.deck_name_missing);
                     }
                 }
                 dialog.dismiss();
             }
         });
-        et_category = (EditText) view.findViewById(R.id.et_category);    //replaces dialog text by typed text
+        et_deck = (EditText) view.findViewById(R.id.et_deck);    //replaces dialog text by typed text
     }
 
     //close dialog box
