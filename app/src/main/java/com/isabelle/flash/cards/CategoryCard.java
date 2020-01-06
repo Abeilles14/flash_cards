@@ -11,8 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.isabelle.flash.R;
-import com.isabelle.flash.database.DbHelper;
-import com.isabelle.flash.models.Category;
+import com.isabelle.flash.controllers.SwipeControllerActions;
 
 import static android.support.v7.widget.helper.ItemTouchHelper.*;
 
@@ -33,43 +32,10 @@ public class CategoryCard extends Callback {
     private RecyclerView.ViewHolder currentItemViewHolder = null;
     private static final float buttonWidth = 300;
 
-    private Category category;
-    private DbHelper dbHelper;
+    private SwipeControllerActions buttonsActions;
 
-    public CategoryCard(Context context) {
-        this.dbHelper = new DbHelper(context);
-    }
-
-//    public void setCategory(Category category) {
-//        this.category = category;
-//    }
-//
-//    public long getId() {
-//        return category.getId();
-//    }
-//
-//    public void setId(long id) {
-//        this.category.setId(id);
-//    }
-
-    //edit button clicked
-    public void onLeftClicked(RecyclerView.ViewHolder viewHolder) {
-        //TODO set title, refresh adapter
-        int position = viewHolder.getAdapterPosition();
-
-        category = dbHelper.getAllCategories().get(position);
-        //open dialog box
-        //category.setTitle("");
-
-        dbHelper.updateCategory(category);
-    }
-
-    //delete button clicked
-    public void onRightClicked(RecyclerView.ViewHolder viewHolder) {
-        //TODO refresh adapter and view,
-        //delete from database using position of card
-        int position = viewHolder.getAdapterPosition();
-        dbHelper.deleteItem(dbHelper.getAllCategories().get(position).getId(), DbHelper.CATEGORIES_TABLE);
+    public CategoryCard(SwipeControllerActions buttonsActions) {
+        this.buttonsActions = buttonsActions;
     }
 
 
@@ -180,12 +146,13 @@ public class CategoryCard extends Callback {
                         if (buttonShowedState == ButtonsState.LEFT_VISIBLE) {
                             //on left button clicked, edit
                             //buttonsActions.onLeftClicked(viewHolder.getAdapterPosition());
-                            onLeftClicked(viewHolder);
+                            buttonsActions.onLeftClicked(viewHolder.getAdapterPosition());
                         }
                         else if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
                             //on right button clicked, delete
                             //buttonsActions.onRightClicked(viewHolder.getAdapterPosition());
-                            onRightClicked(viewHolder);
+                            buttonsActions.onRightClicked(viewHolder.getAdapterPosition());
+
                         }
                     }
                     buttonShowedState = ButtonsState.GONE;

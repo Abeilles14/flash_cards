@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.isabelle.flash.cards.CategoryCard;
+import com.isabelle.flash.controllers.SwipeControllerActions;
 import com.isabelle.flash.database.DbHelper;
 import com.isabelle.flash.models.Category;
 import com.isabelle.flash.navDrawer.MainActivity;
@@ -39,8 +40,8 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
 
     private FloatingActionButton buttonFab;
     private ArrayList<Category> categories;
-    CategoryCard cardController = null;
-    DbHelper dbHelper;
+    private CategoryCard cardController = null;
+    private DbHelper dbHelper;
 
     //edit/add dialog
     private AlertDialog.Builder alertDialog;
@@ -75,7 +76,21 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
 
         //initialize CategoryCard for swipe controller
         //implement Swipe Buttons
-        cardController = new CategoryCard(getContext());
+        cardController = new CategoryCard(new SwipeControllerActions() {
+            @Override
+            public void onLeftClicked(int position) {
+                //TODO edit category
+            }
+
+            @Override
+            public void onRightClicked(int position) {
+                //TODO delete category
+                //delete from database using position of card
+                dbHelper.deleteItem(categories.get(position).getId(), DbHelper.CATEGORIES_TABLE);
+                category_adapter.notifyItemRemoved(position);
+            }
+        });
+
         dbHelper = new DbHelper(getActivity());
 
 

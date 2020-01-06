@@ -361,6 +361,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public void deleteItem(long id, String table){
         SQLiteDatabase db = this.getWritableDatabase();
         String[] strId = new String[] {String.valueOf(id)};
+        System.out.println("item deleted");
         db.delete(table, _ID + " = ?", strId);
         this.closeDB();;
     }
