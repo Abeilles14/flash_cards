@@ -47,8 +47,9 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     //edit/add dialog
     private AlertDialog.Builder alertDialog;
     private EditText et_category;
-    private boolean add = false;
     private Toast toast;
+    private boolean add = false;
+    private int edit_position;
 
     public CategoriesFragment() {
 
@@ -81,11 +82,18 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         //initialize CategoryCard for swipe controller
         //implement Swipe Buttons
         cardController = new CategoryCard(new SwipeControllerActions() {
+            //edit
             @Override
             public void onLeftClicked(int position) {
                 //TODO edit category
+                removeView();
+                edit_position = position;
+                alertDialog.setTitle("Edit Category");
+                et_category.setText(categories.get(position).getTitle());
+                alertDialog.show();
             }
 
+            //delete
             @Override
             public void onRightClicked(int position) {
                 //delete from database using position of card
@@ -146,11 +154,10 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         alertDialog.setPositiveButton("Save", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                //adding category
                 if (add) {
                     add = false;
-
                     Category category = new Category();
-
                     //if textfield not empty, try catch
                     if (!et_category.getText().toString().isEmpty()) {
                         category.setTitle(et_category.getText().toString());    //set category title
@@ -161,27 +168,35 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                             //refresh category list
                             //NOTE: refreshing array by getting through db doesn't refresh view, but .add() does
                             categories.add(category);
-                            //category_adapter.notifyDataSetChanged();
+                            category_adapter.notifyItemInserted(categories.size());
                         } catch (Exception ex) {
                             Log.i(LOG_TAG, "Could not create category");
                         }
                     } else {        //if textfield empty, toast
-                        toast = Toast.makeText(getActivity(), R.string.category_name_missing, Toast.LENGTH_LONG);
-                        View toastView = toast.getView();
-                        toastView.getBackground().setColorFilter(getResources().getColor(R.color.toast),PorterDuff.Mode.SRC_IN);
-                        toast.show();
+                        showToast(R.string.category_name_missing);
                     }
 
-
-                    dialog.dismiss();
-                } else {      //not sure what this does
-                    //countries.set(edit_position, et_category.getText().toString());
-                    //category_adapter.notifyDataSetChanged();    //refresh recyclerview
-                    dialog.dismiss();
+                    //editing category
+                } else {
+                    //if textfield not empty, try catch
+                    if (!et_category.getText().toString().isEmpty()) {
+                        try {
+                            System.out.println(edit_position);
+                            Utils.hideKeyboard(getActivity());
+                            categories.get(edit_position).setTitle(et_category.getText().toString());
+                            dbHelper.updateCategory(categories.get(edit_position));
+                            //category_adapter.notifyItemChanged(position);
+                        } catch (Exception ex) {
+                            Log.i(LOG_TAG, "Could not create category");
+                        }
+                    } else {        //if textfield empty, toast
+                        showToast(R.string.category_name_missing);
+                    }
                 }
+                dialog.dismiss();
             }
         });
-        et_category = (EditText) view.findViewById(R.id.et_country);    //replaces dialog text by typed text
+        et_category = (EditText) view.findViewById(R.id.et_category);    //replaces dialog text by typed text
     }
 
     //close dialog box
@@ -190,7 +205,13 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
             ((ViewGroup) view.getParent()).removeView(view);
         }
     }
+
+    private void showToast(int textId) {
+        toast = Toast.makeText(getActivity(), textId, Toast.LENGTH_LONG);
+        View toastView = toast.getView();
+        toastView.getBackground().setColorFilter(getResources().getColor(R.color.toast), PorterDuff.Mode.SRC_IN);
+        toast.show();
+    }
+
 }
-
-
 

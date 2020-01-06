@@ -323,7 +323,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return flashCards;
     }
 
-
+    //TODO remove commented undos
     ////////UPDATE
     //category
     public long updateCategory(Category category) {
