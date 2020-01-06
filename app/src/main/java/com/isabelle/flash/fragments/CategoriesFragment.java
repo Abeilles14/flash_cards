@@ -74,6 +74,8 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         layoutManager = new LinearLayoutManager(this.getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
+        dbHelper = new DbHelper(getActivity());
+
         //initialize CategoryCard for swipe controller
         //implement Swipe Buttons
         cardController = new CategoryCard(new SwipeControllerActions() {
@@ -85,14 +87,19 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
             @Override
             public void onRightClicked(int position) {
                 //TODO delete category
+                System.out.println("Delete button clicked");
                 //delete from database using position of card
                 dbHelper.deleteItem(categories.get(position).getId(), DbHelper.CATEGORIES_TABLE);
-                category_adapter.notifyItemRemoved(position);
+                //refresh list
+                categories = new ArrayList<>(dbHelper.getAllCategories());
+
+                //doesn't work on first click...
+                category_adapter = new CategoryAdapter(getActivity(), categories);
+                recyclerView.setAdapter(category_adapter);
+                System.out.println("adapter button called");
+//                category_adapter.notifyItemRemoved(position);
             }
         });
-
-        dbHelper = new DbHelper(getActivity());
-
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper((cardController));
         itemTouchHelper.attachToRecyclerView(recyclerView);
@@ -111,15 +118,14 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         category_adapter = new CategoryAdapter(this.getActivity(), categories);
         recyclerView.setAdapter(category_adapter);
 
+        System.out.println("adapter view called");
+
         //initialize dialogue box and adding categories
         initDialog();
     }
 
-    //TODO
-    //on add buttonFab click
     @Override
     public void onClick(View v) {
-        //action - add category
         switch (v.getId()) {
             case R.id.addNewCategory:
                 removeView();
@@ -129,11 +135,11 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                 alertDialog.show();
                 break;
             //TODO
-            //case category, on click category go to fragment
+            //case id category card, on click category go to fragment
         }
     }
 
-    //add new categort
+    //add new category
     private void initDialog() {
         alertDialog = new AlertDialog.Builder(getActivity());
         view = getLayoutInflater().inflate(R.layout.fragment_new_category, null);
@@ -144,12 +150,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
             public void onClick(DialogInterface dialog, int which) {
                 if (add) {
                     add = false;
-                    //add to category
-                    //category_adapter.addItem(et_category.getText().toString());
-                    //countries.set(edit_position, et_category.getText().toString());
-                    //category_adapter.notifyDataSetChanged();    //refresh recyclerview
 
-                    //new helper?
                     Category category = new Category();
 
                     //if textfield not empty, try catch
@@ -161,7 +162,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
 
                             //open fragment?? add new category? add new card?
                             categories.add(category);
-                            category_adapter.notifyDataSetChanged();    //doesnt do anything?
+                            //category_adapter.notifyDataSetChanged();    //doesnt do anything?
                             System.out.println(categories.size());
 
                             //refresh?
@@ -176,7 +177,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                     dialog.dismiss();
                 } else {      //not sure what this does
                     //countries.set(edit_position, et_category.getText().toString());
-                    category_adapter.notifyDataSetChanged();    //refresh recyclerview
+                    //category_adapter.notifyDataSetChanged();    //refresh recyclerview
                     dialog.dismiss();
                 }
             }

@@ -38,7 +38,6 @@ public class CategoryCard extends Callback {
         this.buttonsActions = buttonsActions;
     }
 
-
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         return makeMovementFlags(0, LEFT | RIGHT);
