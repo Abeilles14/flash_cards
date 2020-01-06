@@ -40,14 +40,12 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     private FloatingActionButton buttonFab;
     private ArrayList<Category> categories;
     CategoryCard cardController = null;
-    CategoryCard categoryCard = null;
     DbHelper dbHelper;
 
     //edit/add dialog
     private AlertDialog.Builder alertDialog;
     private EditText et_category;
     private boolean add = false;
-    private int edit_position;
 
     public CategoriesFragment() {
 
@@ -92,14 +90,11 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         });
 
         //retrieve array of categories from database
-        categories = new ArrayList<Category>(dbHelper.getAllCategories());
+        categories = new ArrayList<>(dbHelper.getAllCategories());
 
         //initialize adapter? (after categories array set
         category_adapter = new CategoryAdapter(this.getActivity(), categories);
         recyclerView.setAdapter(category_adapter);
-
-        //update adapter
-//        category_adapter.notifyDataSetChanged();
 
         //initialize dialogue box and adding categories
         initDialog();
@@ -118,8 +113,8 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                 et_category.setText("");        //initial text on edit bar
                 alertDialog.show();
                 break;
+            //TODO
             //case category, on click category go to fragment
-
         }
     }
 
@@ -150,7 +145,6 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                             dbHelper.createCategory(category);  //db create new category title
 
                             //open fragment?? add new category? add new card?
-                            //getActivity().displayView(new CategoriesFragment(), null);
                             categories.add(category);
                             category_adapter.notifyDataSetChanged();    //doesnt do anything?
                             System.out.println(categories.size());

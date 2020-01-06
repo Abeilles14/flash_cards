@@ -34,37 +34,42 @@ public class CategoryCard extends Callback {
     private static final float buttonWidth = 300;
 
     private Category category;
-    private DbHelper helper;
+    private DbHelper dbHelper;
 
     public CategoryCard(Context context) {
-        this.helper = new DbHelper(context);
+        this.dbHelper = new DbHelper(context);
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
-    }
+//    public void setCategory(Category category) {
+//        this.category = category;
+//    }
+//
+//    public long getId() {
+//        return category.getId();
+//    }
+//
+//    public void setId(long id) {
+//        this.category.setId(id);
+//    }
 
-    public long getId() {
-        return category.getId();
-    }
-
-    public void setId(long id) {
-        this.category.setId(id);
-    }
-
-    //TODO
     //edit button clicked
     public void onLeftClicked(RecyclerView.ViewHolder viewHolder) {
-        //edit title, then refresh list
-        helper.updateCategory(category);
-        //set title
+        //TODO set title, refresh adapter
+        int position = viewHolder.getAdapterPosition();
+
+        category = dbHelper.getAllCategories().get(position);
+        //open dialog box
+        //category.setTitle("");
+
+        dbHelper.updateCategory(category);
     }
 
     //delete button clicked
     public void onRightClicked(RecyclerView.ViewHolder viewHolder) {
-        //delete from db, then refresh list
-        helper.deleteItem(category.getId(), DbHelper.CATEGORIES_TABLE);
-        //refresh... adapter? done in fragment?`
+        //TODO refresh adapter and view,
+        //delete from database using position of card
+        int position = viewHolder.getAdapterPosition();
+        dbHelper.deleteItem(dbHelper.getAllCategories().get(position).getId(), DbHelper.CATEGORIES_TABLE);
     }
 
 

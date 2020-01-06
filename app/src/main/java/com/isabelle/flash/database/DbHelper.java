@@ -167,8 +167,9 @@ public class DbHelper extends SQLiteOpenHelper {
 
         ArrayList<Category> categories = new ArrayList<Category>();
         Cursor cursor = db.rawQuery(query, null);
-        if(cursor != null) {
-            cursor.moveToFirst();       //may be wrong?
+        cursor.moveToFirst();       //may be wrong?
+
+        if((cursor != null) && (cursor.getCount()>0)) {     //check for valid cursor
             do{
                 Category category = new Category();
                 category.setId(cursor.getLong(cursor.getColumnIndex(_ID)));
