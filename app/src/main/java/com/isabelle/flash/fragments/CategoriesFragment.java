@@ -3,6 +3,7 @@ package com.isabelle.flash.fragments;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -47,6 +48,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     private AlertDialog.Builder alertDialog;
     private EditText et_category;
     private boolean add = false;
+    private Toast toast;
 
     public CategoriesFragment() {
 
@@ -86,16 +88,25 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
 
             @Override
             public void onRightClicked(int position) {
-                //TODO delete category
+                //TODO fix delete category bug
                 System.out.println("Delete button clicked");
-                //delete from database using position of card
-                dbHelper.deleteItem(categories.get(position).getId(), DbHelper.CATEGORIES_TABLE);
                 //refresh list
                 categories = new ArrayList<>(dbHelper.getAllCategories());
 
-                //doesn't work on first click...
+                //delete from database using position of card
+                dbHelper.deleteItem(categories.get(position).getId(), DbHelper.CATEGORIES_TABLE);
+
+                ///////////test
+                //refresh list
+                //TODO try deleting directly from array, remove db getAll and adapter
+                //categories.remove(position);
+                categories = new ArrayList<>(dbHelper.getAllCategories());
+
+                //may not be needed? simpler way?
                 category_adapter = new CategoryAdapter(getActivity(), categories);
                 recyclerView.setAdapter(category_adapter);
+                ////////////
+
                 System.out.println("adapter button called");
 //                category_adapter.notifyItemRemoved(position);
             }
@@ -160,8 +171,10 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                             Utils.hideKeyboard(getActivity());
                             dbHelper.createCategory(category);  //db create new category title
 
-                            //open fragment?? add new category? add new card?
+                            //refresh category list
+                            //NOTE: refreshing array by getting through db doesn't refresh view, but .add() does
                             categories.add(category);
+
                             //category_adapter.notifyDataSetChanged();    //doesnt do anything?
                             System.out.println(categories.size());
 
@@ -170,7 +183,10 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                             Log.i(LOG_TAG, "Could not create category");
                         }
                     } else {        //if textfield empty, toast
-                        Toast.makeText(getActivity(), "Category must have a name.", Toast.LENGTH_LONG).show();
+                        toast = Toast.makeText(getActivity(), R.string.category_name_missing, Toast.LENGTH_LONG);
+                        View toastView = toast.getView();
+                        toastView.getBackground().setColorFilter(getResources().getColor(R.color.toast),PorterDuff.Mode.SRC_IN);
+                        toast.show();
                     }
 
 

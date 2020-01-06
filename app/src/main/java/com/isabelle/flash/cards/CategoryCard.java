@@ -141,17 +141,18 @@ public class CategoryCard extends Callback {
 
                     //button actions
                     //removed buttonsActions != null && from if??
-                    if (buttonInstance != null && buttonInstance.contains(event.getX(), event.getY())) {
-                        if (buttonShowedState == ButtonsState.LEFT_VISIBLE) {
-                            //on left button clicked, edit
-                            //buttonsActions.onLeftClicked(viewHolder.getAdapterPosition());
-                            buttonsActions.onLeftClicked(viewHolder.getAdapterPosition());
-                        }
-                        else if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
-                            //on right button clicked, delete
-                            //buttonsActions.onRightClicked(viewHolder.getAdapterPosition());
-                            buttonsActions.onRightClicked(viewHolder.getAdapterPosition());
+                    if (buttonsActions != null && buttonInstance != null && buttonInstance.contains(event.getX(), event.getY())) {
+                        if (buttonInstance != null && buttonInstance.contains(event.getX(), event.getY())) {
+                            if (buttonShowedState == ButtonsState.LEFT_VISIBLE) {
+                                //on left button clicked, edit
+                                //buttonsActions.onLeftClicked(viewHolder.getAdapterPosition());
+                                buttonsActions.onLeftClicked(viewHolder.getAdapterPosition());
+                            } else if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
+                                //on right button clicked, delete
+                                //buttonsActions.onRightClicked(viewHolder.getAdapterPosition());
+                                buttonsActions.onRightClicked(viewHolder.getAdapterPosition());
 
+                            }
                         }
                     }
                     buttonShowedState = ButtonsState.GONE;
@@ -175,7 +176,7 @@ public class CategoryCard extends Callback {
 
         float buttonPadding = 2;
         float buttonMarginHorizontal = viewHolder.itemView.getResources().getDimension(R.dimen.button_horizontal_margin);
-        float buttonMarginVertical = viewHolder.itemView.getResources().getDimension(R.dimen.button_vertical_margin)+buttonPadding;
+        float buttonMarginVertical = viewHolder.itemView.getResources().getDimension(R.dimen.button_vertical_margin) + buttonPadding;
 
         Drawable ic_edit = viewHolder.itemView.getResources().getDrawable(R.drawable.ic_edit);
         Drawable ic_delete = viewHolder.itemView.getResources().getDrawable(R.drawable.ic_delete);
@@ -187,13 +188,13 @@ public class CategoryCard extends Callback {
         RectF leftButton = new RectF(itemView.getLeft() + buttonMarginHorizontal, itemView.getTop() + buttonMarginVertical, itemView.getLeft() + buttonWidth, itemView.getBottom() - buttonMarginVertical);
         p.setColor(viewHolder.itemView.getResources().getColor(R.color.edit_card));
         c.drawRoundRect(leftButton, corners, corners, p);
-        drawIcon(ic_edit,c, leftButton);
+        drawIcon(ic_edit, c, leftButton);
 
         //delete button
         RectF rightButton = new RectF(itemView.getRight() - buttonWidth, itemView.getTop() + buttonMarginVertical, itemView.getRight() - buttonMarginHorizontal, itemView.getBottom() - buttonMarginVertical);
         p.setColor(viewHolder.itemView.getResources().getColor(R.color.delete_card));
         c.drawRoundRect(rightButton, corners, corners, p);
-        drawIcon(ic_delete,c, rightButton);
+        drawIcon(ic_delete, c, rightButton);
 
         buttonInstance = null;
         if (buttonShowedState == ButtonsState.LEFT_VISIBLE) {
@@ -209,10 +210,10 @@ public class CategoryCard extends Callback {
         int ic_width = icon.getMinimumWidth() + 30;
         int ic_height = icon.getMinimumHeight() + 30;
         //icon top left corner position
-        int left = (int) button.centerX()-(ic_width/2);
-        int top = (int) button.centerY()-(ic_height/2);
+        int left = (int) button.centerX() - (ic_width / 2);
+        int top = (int) button.centerY() - (ic_height / 2);
 
-        icon.setBounds(left, top, left+ic_width, top+ic_height);
+        icon.setBounds(left, top, left + ic_width, top + ic_height);
         icon.draw(c);
     }
 

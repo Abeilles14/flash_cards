@@ -4,6 +4,11 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <!-- Value required -->
+    <string name="category_name_missing">Category must have a name</string>
+    <string name="deck_name_missing">Deck must have a name</string>
+    <string name="flashcard_question_missing">Flashcard must have a question</string>
+
     <!-- Card strings-->
     <string name="category_name">Category Name</string>
     <string name="create_category">Create Category</string>
@@ -18,8 +23,6 @@
     <string name="flashcard_content_dummy">Flashcard Content</string>
     <string name="create_flashcard">Create Flashcard</string>
     <string name="create_deck">Create Deck</string>
-
-
 
     <!-- Undo Controller-->
 
@@ -45,4 +48,5 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+
 </resources>
