@@ -323,15 +323,14 @@ public class DbHelper extends SQLiteOpenHelper {
         return flashCards;
     }
 
-    //TODO remove commented undos
+    //TODO fix updates
     ////////UPDATE
     //category
     public long updateCategory(Category category) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(_ID, category.getId());
         values.put(TITLE, category.getTitle());
-        return db.insert(CATEGORIES_TABLE, null, values);
+        return db.update(CATEGORIES_TABLE, values, _ID + " = " + category.getId(), null);
     }
 
     //deck

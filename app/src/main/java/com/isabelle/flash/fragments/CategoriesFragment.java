@@ -25,7 +25,6 @@ import com.isabelle.flash.cards.CategoryCard;
 import com.isabelle.flash.controllers.SwipeControllerActions;
 import com.isabelle.flash.database.DbHelper;
 import com.isabelle.flash.models.Category;
-import com.isabelle.flash.navDrawer.MainActivity;
 import com.isabelle.flash.navDrawer.Utils;
 
 import java.util.ArrayList;
@@ -99,11 +98,8 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                 //delete from database using position of card
                 dbHelper.deleteItem(categories.get(position).getId(), DbHelper.CATEGORIES_TABLE);
                 categories.remove(position);
-
-                //TODO simplify/replace?
-                category_adapter = new CategoryAdapter(getActivity(), categories);
-                recyclerView.setAdapter(category_adapter);
-//              category_adapter.notifyItemRemoved(position);
+                //refresh
+                category_adapter.notifyItemRemoved(position);
             }
         });
 
@@ -123,9 +119,6 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         //initialize adapter? (after categories array set
         category_adapter = new CategoryAdapter(this.getActivity(), categories);
         recyclerView.setAdapter(category_adapter);
-
-        System.out.println("adapter view called");
-
         //initialize dialogue box and adding categories
         initDialog();
     }
@@ -164,11 +157,11 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                         try {
                             Utils.hideKeyboard(getActivity());
                             dbHelper.createCategory(category);  //db create new category title
-
-                            //refresh category list
-                            //NOTE: refreshing array by getting through db doesn't refresh view, but .add() does
                             categories.add(category);
+
+                            //refresh
                             category_adapter.notifyItemInserted(categories.size());
+
                         } catch (Exception ex) {
                             Log.i(LOG_TAG, "Could not create category");
                         }
@@ -181,11 +174,13 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                     //if textfield not empty, try catch
                     if (!et_category.getText().toString().isEmpty()) {
                         try {
-                            System.out.println(edit_position);
                             Utils.hideKeyboard(getActivity());
                             categories.get(edit_position).setTitle(et_category.getText().toString());
                             dbHelper.updateCategory(categories.get(edit_position));
-                            //category_adapter.notifyItemChanged(position);
+
+                            //refresh
+                            category_adapter.notifyItemChanged(edit_position);
+
                         } catch (Exception ex) {
                             Log.i(LOG_TAG, "Could not create category");
                         }
