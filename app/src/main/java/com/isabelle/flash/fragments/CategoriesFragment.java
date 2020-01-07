@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -25,7 +26,7 @@ import com.isabelle.flash.cards.RecyclerCard;
 import com.isabelle.flash.controllers.SwipeControllerActions;
 import com.isabelle.flash.database.DbHelper;
 import com.isabelle.flash.models.Category;
-import com.isabelle.flash.models.Deck;
+import com.isabelle.flash.navDrawer.MainActivity;
 import com.isabelle.flash.navDrawer.Utils;
 
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     private static final String LOG_TAG = "Category Fragment";
 
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter category_adapter;
+    private CategoryAdapter category_adapter;
     private RecyclerView.LayoutManager layoutManager;
     private View view;
 
@@ -62,10 +63,10 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(final View view, Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        //initialize FloatingActionButton and set colors
+        //initialize FloatingActionButton and clicks
         buttonFab = (FloatingActionButton) view.findViewById(R.id.addNewCategory);
         buttonFab.setOnClickListener(this);
 
@@ -73,12 +74,15 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         recyclerView = view.findViewById(R.id.list_cards);
         recyclerView.setHasFixedSize(true);
 
+        recyclerView.setClickable(true);
+        recyclerView.setOnClickListener(this);
+
         //initialize layout manager
         layoutManager = new LinearLayoutManager(this.getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
         dbHelper = new DbHelper(getActivity());
-
+        getActivity().setTitle("Categories");
         //initialize CategoryCard for swipe controller
         //implement Swipe Buttons
         cardController = new RecyclerCard(new SwipeControllerActions() {
@@ -120,6 +124,26 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         //initialize adapter? (after categories array set
         category_adapter = new CategoryAdapter(this.getActivity(), categories);
         recyclerView.setAdapter(category_adapter);
+
+        //click on catogory item
+        category_adapter.setOnItemClickListener(new CategoryAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                categories.get(position);
+                //save all to bundle
+                Bundle bundle = new Bundle();
+
+                bundle.putLong("category_id", categories.get(position).getId());
+                bundle.putString("category_title", categories.get(position).getTitle());
+
+                //open decks fragment
+                DecksFragment decksFragment = new DecksFragment();
+                decksFragment.setArguments(bundle);
+                AppCompatActivity activity = (AppCompatActivity) view.getContext();
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, decksFragment).addToBackStack(null).commit();
+            }
+        });
+
         //initialize dialogue box and adding categories
         initDialog();
     }
@@ -127,15 +151,13 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.addNewCategory:
+            case R.id.addNewCategory:   //if clicked on add category button
                 removeView();
                 add = true;
                 alertDialog.setTitle("Add Category");       //dialog box title
                 et_category.setText("");        //initial text on edit bar
                 alertDialog.show();
                 break;
-            //TODO
-            //case id category card, on click category go to fragment
         }
     }
 
@@ -158,7 +180,9 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                         try {
                             Utils.hideKeyboard(getActivity());
                             dbHelper.createCategory(category);  //db create new category title
-                            categories = new ArrayList<>(dbHelper.getAllCategories());
+
+                            categories.add(category);   //adding to array refreshes view
+                            //categories = new ArrayList<>(dbHelper.getAllCategories());
 
                             //refresh
                             category_adapter.notifyItemInserted(categories.size());

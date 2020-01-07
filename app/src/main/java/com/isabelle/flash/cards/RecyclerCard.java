@@ -1,6 +1,5 @@
 package com.isabelle.flash.cards;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
@@ -81,9 +80,12 @@ public class RecyclerCard extends Callback {
         }
         if (buttonShowedState == ButtonsState.GONE) {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+
+            //TODO control swipe range
+            //viewHolder.itemView.setTranslationX(Math.min(dX, buttonWidth));
+
         }
         currentItemViewHolder = viewHolder;
-        //drawButtons(c, viewHolder);
     }
 
     //check how much to left/right swiped item, change state to show buttons
@@ -140,7 +142,6 @@ public class RecyclerCard extends Callback {
                     swipeBack = false;
 
                     //button actions
-                    //removed buttonsActions != null && from if??
                     if (buttonsActions != null && buttonInstance != null && buttonInstance.contains(event.getX(), event.getY())) {
                         if (buttonInstance != null && buttonInstance.contains(event.getX(), event.getY())) {
                             if (buttonShowedState == ButtonsState.LEFT_VISIBLE) {
@@ -151,7 +152,6 @@ public class RecyclerCard extends Callback {
                                 //on right button clicked, delete
                                 //buttonsActions.onRightClicked(viewHolder.getAdapterPosition());
                                 buttonsActions.onRightClicked(viewHolder.getAdapterPosition());
-
                             }
                         }
                     }

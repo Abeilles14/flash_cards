@@ -68,7 +68,7 @@ public class DecksFragment extends Fragment implements View.OnClickListener {
         buttonFab.setOnClickListener(this);
 
         //initialize recycler view from fragment_deck
-        recyclerView = view.findViewById(R.id.list_cards);
+        recyclerView = view.findViewById(R.id.decks_list_cards);
         recyclerView.setHasFixedSize(true);
 
         //initialize layout manager
@@ -76,9 +76,12 @@ public class DecksFragment extends Fragment implements View.OnClickListener {
         recyclerView.setLayoutManager(layoutManager);
 
         dbHelper = new DbHelper(getActivity()); //supposed to be declared after bundles?
+        //retrieve information sent to new fragment
         Bundle b = getArguments();
-        category_title = b.getString(dbHelper.TITLE);
-        category_id = b.getLong(dbHelper._ID);
+        if (b != null) {
+            category_id = b.getLong("category_id");
+            category_title = b.getString("category_title");
+        }
         getActivity().setTitle(category_title);
 
         //initialize deckCard for swipe controller
@@ -117,7 +120,7 @@ public class DecksFragment extends Fragment implements View.OnClickListener {
         });
 
         //retrieve array of decks from database
-        decks = new ArrayList<Deck>(dbHelper.getAllDecksByCategoryId(category_id));
+        decks = new ArrayList<>(dbHelper.getAllDecksByCategoryId(category_id));
 
         //initialize adapter? (after decks array set
         deck_adapter = new DeckAdapter(this.getActivity(), decks);
@@ -160,7 +163,7 @@ public class DecksFragment extends Fragment implements View.OnClickListener {
                         try {
                             Utils.hideKeyboard(getActivity());
                             dbHelper.createDeck(deck,category_id);  //db create new deck title
-                            decks = new ArrayList<Deck>(dbHelper.getAllDecksByCategoryId(category_id));
+                            decks = new ArrayList<>(dbHelper.getAllDecksByCategoryId(category_id));
 
                             //refresh
                             deck_adapter.notifyItemInserted(decks.size());

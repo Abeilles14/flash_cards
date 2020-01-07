@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.isabelle.flash.R;
-import com.isabelle.flash.models.Category;
 import com.isabelle.flash.models.Deck;
 
 import java.util.ArrayList;
@@ -24,7 +23,7 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder> {
 
     //single row/card in fragment_category
     //if item in list gets clicked, will activate this class
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView deck_name;
 
@@ -60,6 +59,8 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull DeckAdapter.ViewHolder viewHolder, int i) {
         //get specific list item tag
         viewHolder.itemView.setTag(decks.get(i));  //use tag in onClick to check which clicked
+
+        //TODO fix null object bug
         viewHolder.deck_name.setText(decks.get(i).getTitle());
     }
 

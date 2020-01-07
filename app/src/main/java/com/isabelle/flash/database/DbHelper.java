@@ -167,7 +167,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         ArrayList<Category> categories = new ArrayList<Category>();
         Cursor cursor = db.rawQuery(query, null);
-        cursor.moveToFirst();       //may be wrong?
+        cursor.moveToFirst();
 
         if((cursor != null) && (cursor.getCount()>0)) {     //check for valid cursor
             do{
@@ -250,7 +250,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
         ArrayList<Deck> decks = new ArrayList<Deck>();
         Cursor cursor = db.rawQuery(query, null);
-        if(cursor != null) {
+        cursor.moveToFirst();
+        if((cursor != null)&& (cursor.getCount()>0)) {
             do{
                 Deck deck = new Deck();
                 deck.setId(cursor.getLong(cursor.getColumnIndex(_ID)));
@@ -305,7 +306,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
         ArrayList<FlashCard> flashCards = new ArrayList<FlashCard>();
         Cursor cursor = db.rawQuery(query, null);
-        if(cursor != null) {
+        cursor.moveToFirst();
+        if((cursor != null)&& (cursor.getCount()>0)) {
             do{
                 FlashCard flashCard = new FlashCard();
                 flashCard.setId(cursor.getLong(cursor.getColumnIndex(_ID)));

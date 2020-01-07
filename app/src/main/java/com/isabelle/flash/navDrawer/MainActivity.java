@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //on start, open profile, or if first time, or back button
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new ProfileFragment()).commit();
+                    new CategoriesFragment()).commit();
             navigationView.setCheckedItem(R.id.nav_profile);
         }
     }
