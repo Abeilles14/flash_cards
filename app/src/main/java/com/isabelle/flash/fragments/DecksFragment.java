@@ -135,7 +135,7 @@ public class DecksFragment extends Fragment implements View.OnClickListener {
             case R.id.addNewDeck:
                 removeView();
                 add = true;
-                alertDialog.setTitle("Add deck");       //dialog box title
+                alertDialog.setTitle("Add Deck");       //dialog box title
                 et_deck.setText("");        //initial text on edit bar
                 alertDialog.show();
                 break;
@@ -163,7 +163,9 @@ public class DecksFragment extends Fragment implements View.OnClickListener {
                         try {
                             Utils.hideKeyboard(getActivity());
                             dbHelper.createDeck(deck,category_id);  //db create new deck title
-                            decks = new ArrayList<>(dbHelper.getAllDecksByCategoryId(category_id));
+
+                            decks.add(deck);
+                            //decks = new ArrayList<>(dbHelper.getAllDecksByCategoryId(category_id));
 
                             //refresh
                             deck_adapter.notifyItemInserted(decks.size());

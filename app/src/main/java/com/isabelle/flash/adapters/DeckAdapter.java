@@ -49,7 +49,7 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder> {
     public DeckAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         //referring to fragment_categories
         //connected to horizontal layout/row
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_category,viewGroup,false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_deck,viewGroup,false);
         return new ViewHolder(view);   //returns to ViewHolder with the layout of the category row
     }
 

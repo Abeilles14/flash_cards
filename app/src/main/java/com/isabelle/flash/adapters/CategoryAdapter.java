@@ -44,7 +44,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             super(itemView);
 
             category_name = itemView.findViewById(R.id.category_name);
-
             //on click item
             //since static, pass listener in constructor
             itemView.setOnClickListener(new View.OnClickListener(){
