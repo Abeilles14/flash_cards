@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <android.support.v7.widget.CardView xmlns:card="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="89dp"
+        android:layout_marginLeft="@dimen/button_horizontal_margin"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="@dimen/button_horizontal_margin"
+        android:layout_marginBottom="10dp"
+        card:cardBackgroundColor="@color/cardview_light_background"
+        card:cardCornerRadius="5dp"
+        card:cardElevation="5dp"
+        card:cardUseCompatPadding="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/activity_vertical_margin"
+            android:paddingTop="8dip"
+            android:paddingRight="@dimen/activity_vertical_margin"
+            android:paddingBottom="8dip">
+
+            <ImageView
+                android:layout_width="72dip"
+                android:layout_height="72dip"
+                android:src="@drawable/ic_flashcard" />
+
+            <TextView
+                android:id="@+id/flashcard_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_vertical_margin"
+                android:layout_marginLeft="@dimen/activity_vertical_margin"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/flashcard_title"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="28sp" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

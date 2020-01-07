@@ -5,8 +5,8 @@ import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -14,63 +14,62 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.isabelle.flash.R;
-import com.isabelle.flash.adapters.CategoryAdapter;
-
-import android.support.design.widget.FloatingActionButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.isabelle.flash.R;
+import com.isabelle.flash.adapters.FlashCardAdapter;
 import com.isabelle.flash.cards.RecyclerCard;
 import com.isabelle.flash.controllers.SwipeControllerActions;
 import com.isabelle.flash.database.DbHelper;
-import com.isabelle.flash.models.Category;
+import com.isabelle.flash.models.FlashCard;
 import com.isabelle.flash.navDrawer.Utils;
 
 import java.util.ArrayList;
 
-public class CategoriesFragment extends Fragment implements View.OnClickListener {
+public class FlashCardsFragment extends Fragment implements View.OnClickListener {
 
-    private static final String LOG_TAG = "Category Fragment";
+    private static final String LOG_TAG = "FlashCard Fragment";
 
     private RecyclerView recyclerView;
-    private CategoryAdapter category_adapter;
+    private FlashCardAdapter flashcard_adapter;
     private RecyclerView.LayoutManager layoutManager;
     private View view;
 
     private FloatingActionButton buttonFab;
-    private ArrayList<Category> categories;
+    private ArrayList<FlashCard> flashcards;
     private RecyclerCard cardController = null;
     private DbHelper dbHelper;
 
-    //edit/add dialog
     private AlertDialog.Builder alertDialog;
-    private EditText et_category;
+    private EditText et_flashcard;
     private Toast toast;
     private boolean add = false;
     private int edit_position;
 
-    public CategoriesFragment() {
+    private String deck_title;
+    private long deck_id;
+
+    public FlashCardsFragment() {
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        return inflater.inflate(R.layout.fragment_categories, container, false);
+        return inflater.inflate(R.layout.fragment_flashcards, container, false);
     }
 
     @Override
-    public void onViewCreated(final View view, Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        //initialize FloatingActionButton and clicks
-        buttonFab = (FloatingActionButton) view.findViewById(R.id.addNewCategory);
+        //initialize FloatingActionButton and set colors
+        buttonFab = (FloatingActionButton) view.findViewById(R.id.addNewFlashCard);
         buttonFab.setOnClickListener(this);
 
-        //initialize recycler view from fragment_category
-        recyclerView = view.findViewById(R.id.list_cards);
+        //initialize recycler view from fragment_deck
+        recyclerView = view.findViewById(R.id.flashcards_list_cards);
         recyclerView.setHasFixedSize(true);
 
         recyclerView.setClickable(true);
@@ -80,19 +79,26 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         layoutManager = new LinearLayoutManager(this.getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        dbHelper = new DbHelper(getActivity());
-        getActivity().setTitle("Categories");
-        //initialize CategoryCard for swipe controller
+        dbHelper = new DbHelper(getActivity()); //supposed to be declared after bundles?
+        //retrieve information sent to new fragment
+        Bundle b = getArguments();
+        if (b != null) {
+            deck_id = b.getLong("deck_id");
+            deck_title = b.getString("deck_title");
+        }
+        getActivity().setTitle(deck_title);
+
+        //initialize deckCard for swipe controller
         //implement Swipe Buttons
         cardController = new RecyclerCard(new SwipeControllerActions() {
+            //TODO fix edit
             //edit
             @Override
             public void onLeftClicked(int position) {
-                //TODO edit category
                 removeView();
                 edit_position = position;
-                alertDialog.setTitle("Edit Category");
-                et_category.setText(categories.get(position).getTitle());
+                alertDialog.setTitle("Edit flashcard");
+                et_flashcard.setText(flashcards.get(position).getTitle());
                 alertDialog.show();
             }
 
@@ -100,10 +106,10 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
             @Override
             public void onRightClicked(int position) {
                 //delete from database using position of card
-                dbHelper.deleteItem(categories.get(position).getId(), DbHelper.CATEGORIES_TABLE);
-                categories.remove(position);
+                dbHelper.deleteItem(flashcards.get(position).getId(), DbHelper.FLASHCARDS_TABLE);
+                flashcards.remove(position);
                 //refresh
-                category_adapter.notifyItemRemoved(position);
+                flashcard_adapter.notifyItemRemoved(position);
             }
         });
 
@@ -117,105 +123,97 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
             }
         });
 
-        //retrieve array of categories from database
-        categories = new ArrayList<>(dbHelper.getAllCategories());
+        //retrieve array of decks from database
+        flashcards = new ArrayList<>(dbHelper.getAllFlashCardsByDeckId(deck_id));
 
-        //initialize adapter? (after categories array set
-        category_adapter = new CategoryAdapter(this.getActivity(), categories);
-        recyclerView.setAdapter(category_adapter);
+        //initialize adapter after decks array set
+        flashcard_adapter = new FlashCardAdapter(this.getActivity(), flashcards);
+        recyclerView.setAdapter(flashcard_adapter);
 
         //click on catogory item
-        category_adapter.setOnItemClickListener(new CategoryAdapter.OnItemClickListener() {
+        flashcard_adapter.setOnItemClickListener(new FlashCardAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                categories.get(position);
+                flashcards.get(position);
                 //save all to bundle
                 Bundle bundle = new Bundle();
-
-                bundle.putLong("category_id", categories.get(position).getId());
-                bundle.putString("category_title", categories.get(position).getTitle());
-
-                //open decks fragment
-                DecksFragment decksFragment = new DecksFragment();
-                decksFragment.setArguments(bundle);
-                AppCompatActivity activity = (AppCompatActivity) view.getContext();
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, decksFragment).addToBackStack(null).commit();
             }
         });
 
-        //initialize dialogue box and adding categories
+        //initialize dialogue box and adding decks
         initDialog();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.addNewCategory:   //if clicked on add category button
+            case R.id.addNewFlashCard:
                 removeView();
                 add = true;
-                alertDialog.setTitle("Add Category");       //dialog box title
-                et_category.setText("");        //initial text on edit bar
+                alertDialog.setTitle("Add Flashcard");       //dialog box title
+                et_flashcard.setText("");        //initial text on edit bar
                 alertDialog.show();
                 break;
         }
     }
 
-    //add new category
+    //add new deck
     private void initDialog() {
         alertDialog = new AlertDialog.Builder(getActivity());
-        view = getLayoutInflater().inflate(R.layout.fragment_new_category, null);
+        view = getLayoutInflater().inflate(R.layout.fragment_new_flashcard, null);
         alertDialog.setView(view);
 
         alertDialog.setPositiveButton("Save", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //adding category
+                //adding deck
                 if (add) {
                     add = false;
-                    Category category = new Category();
+                    FlashCard flashcard = new FlashCard();
                     //if textfield not empty, try catch
-                    if (!et_category.getText().toString().isEmpty()) {
-                        category.setTitle(et_category.getText().toString());    //set category title
+                    if (!et_flashcard.getText().toString().isEmpty()) {
+                        flashcard.setTitle(et_flashcard.getText().toString());    //set deck title
                         try {
                             Utils.hideKeyboard(getActivity());
-                            dbHelper.createCategory(category);  //db create new category title
-
-                            categories.add(category);   //adding to array refreshes view
-                            //categories = new ArrayList<>(dbHelper.getAllCategories());
+                            dbHelper.createFlashCard(flashcard, deck_id);  //db create new deck title
+                            //TODO add content and answer
+                            flashcards.add(flashcard);
+                            //decks = new ArrayList<>(dbHelper.getAllDecksByCategoryId(category_id));
 
                             //refresh
-                            category_adapter.notifyItemInserted(categories.size());
+                            flashcard_adapter.notifyItemInserted(flashcards.size());
 
                         } catch (Exception ex) {
-                            Log.i(LOG_TAG, "Could not create category");
+                            Log.i(LOG_TAG, "Could not create flashcard");
                         }
                     } else {        //if textfield empty, toast
-                        showToast(R.string.category_name_missing);
+                        showToast(R.string.flashcard_name_missing);
                     }
 
-                    //editing category
+                    //editing flashcard
                 } else {
                     //if textfield not empty, try catch
-                    if (!et_category.getText().toString().isEmpty()) {
+                    if (!et_flashcard.getText().toString().isEmpty()) {
                         try {
                             Utils.hideKeyboard(getActivity());
-                            categories.get(edit_position).setTitle(et_category.getText().toString());
-                            dbHelper.updateCategory(categories.get(edit_position));
+                            flashcards.get(edit_position).setTitle(et_flashcard.getText().toString());
+                            dbHelper.updateFlashCard(flashcards.get(edit_position));
 
                             //refresh
-                            category_adapter.notifyItemChanged(edit_position);
+                            flashcard_adapter.notifyItemChanged(edit_position);
 
                         } catch (Exception ex) {
-                            Log.i(LOG_TAG, "Could not create category");
+                            Log.i(LOG_TAG, "Could not create flashcard");
                         }
                     } else {        //if textfield empty, toast
-                        showToast(R.string.category_name_missing);
+                        showToast(R.string.flashcard_name_missing);
                     }
                 }
                 dialog.dismiss();
             }
         });
-        et_category = (EditText) view.findViewById(R.id.et_category);    //replaces dialog text by typed text
+        //TODO fix bug et_flashcard_content
+        et_flashcard = (EditText) view.findViewById(R.id.et_flashcard_content);    //replaces dialog text by typed text
     }
 
     //close dialog box
@@ -231,6 +229,5 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         toastView.getBackground().setColorFilter(getResources().getColor(R.color.toast), PorterDuff.Mode.SRC_IN);
         toast.show();
     }
-
 }
 

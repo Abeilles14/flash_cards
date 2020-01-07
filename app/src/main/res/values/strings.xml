@@ -7,6 +7,7 @@
     <!-- Value required -->
     <string name="category_name_missing">Category must have a name</string>
     <string name="deck_name_missing">Deck must have a name</string>
+    <string name="flashcard_name_missing">Flashcard must have a name</string>
     <string name="flashcard_question_missing">Flashcard must have a question</string>
 
     <!-- Card strings-->

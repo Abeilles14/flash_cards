@@ -7,6 +7,7 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -19,11 +20,13 @@ import android.widget.Toast;
 
 import com.isabelle.flash.R;
 import com.isabelle.flash.adapters.DeckAdapter;
+
 import com.isabelle.flash.cards.RecyclerCard;
 import com.isabelle.flash.controllers.SwipeControllerActions;
 import com.isabelle.flash.database.DbHelper;
 import com.isabelle.flash.models.Deck;
 import com.isabelle.flash.navDrawer.Utils;
+
 import java.util.ArrayList;
 
 public class DecksFragment extends Fragment implements View.OnClickListener {
@@ -31,7 +34,7 @@ public class DecksFragment extends Fragment implements View.OnClickListener {
     private static final String LOG_TAG = "Deck Fragment";
 
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter deck_adapter;
+    private DeckAdapter deck_adapter;
     private RecyclerView.LayoutManager layoutManager;
     private View view;
 
@@ -60,7 +63,7 @@ public class DecksFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(final View view, Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         //initialize FloatingActionButton and set colors
@@ -70,6 +73,9 @@ public class DecksFragment extends Fragment implements View.OnClickListener {
         //initialize recycler view from fragment_deck
         recyclerView = view.findViewById(R.id.decks_list_cards);
         recyclerView.setHasFixedSize(true);
+
+        recyclerView.setClickable(true);
+        recyclerView.setOnClickListener(this);
 
         //initialize layout manager
         layoutManager = new LinearLayoutManager(this.getActivity());
@@ -90,7 +96,6 @@ public class DecksFragment extends Fragment implements View.OnClickListener {
             //edit
             @Override
             public void onLeftClicked(int position) {
-                //TODO edit deck
                 removeView();
                 edit_position = position;
                 alertDialog.setTitle("Edit deck");
@@ -125,6 +130,26 @@ public class DecksFragment extends Fragment implements View.OnClickListener {
         //initialize adapter? (after decks array set
         deck_adapter = new DeckAdapter(this.getActivity(), decks);
         recyclerView.setAdapter(deck_adapter);
+
+        //click on deck item
+        deck_adapter.setOnItemClickListener(new DeckAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                decks.get(position);
+                //save all to bundle
+                Bundle bundle = new Bundle();
+
+                bundle.putLong("deck_id", decks.get(position).getId());
+                bundle.putString("deck_title", decks.get(position).getTitle());
+
+                //open decks fragment
+                FlashCardsFragment flashCardsFragment = new FlashCardsFragment();
+                flashCardsFragment.setArguments(bundle);
+                AppCompatActivity activity = (AppCompatActivity) view.getContext();
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, flashCardsFragment).addToBackStack(null).commit();
+            }
+        });
+
         //initialize dialogue box and adding decks
         initDialog();
     }
@@ -139,8 +164,6 @@ public class DecksFragment extends Fragment implements View.OnClickListener {
                 et_deck.setText("");        //initial text on edit bar
                 alertDialog.show();
                 break;
-            //TODO
-            //case id deck card, on click deck go to fragment
         }
     }
 
@@ -215,6 +238,5 @@ public class DecksFragment extends Fragment implements View.OnClickListener {
         toastView.getBackground().setColorFilter(getResources().getColor(R.color.toast), PorterDuff.Mode.SRC_IN);
         toast.show();
     }
-
 }
 
